@@ -8,15 +8,11 @@
 #define PULSAR_GUARD_BPHASH__HASH_HPP_
 
 #include <cstdint>
-#include <array>
+#include <vector>
 #include <string>
 
 namespace bphash {
  
-
-// forward declare for friend
-class HashImpl;
-
 
 /*! \brief A hash of some data
  *
@@ -28,27 +24,51 @@ class HashImpl;
 class Hash
 {
     public:
-        /// Construct as a hash of zeros
-        Hash() noexcept : Hash(0, 0) { };
+        /*! \brief Construct given 32-bit components */
+        Hash(const std::vector<uint32_t> & h)
+            : hash_(h) { }
 
-        Hash(const Hash &) noexcept             = default;
-        Hash & operator=(const Hash &) noexcept = default;
-        Hash(Hash &&) noexcept                  = default;
-        Hash & operator=(Hash &&) noexcept      = default;
-
-        bool operator==(const Hash & rhs) const noexcept { return hash_ == rhs.hash_; } 
-        bool operator!=(const Hash & rhs) const noexcept { return hash_ != rhs.hash_; } 
-        bool operator>(const Hash & rhs)  const noexcept { return hash_ >  rhs.hash_; } 
-        bool operator>=(const Hash & rhs) const noexcept { return hash_ >= rhs.hash_; } 
-        bool operator<(const Hash & rhs)  const noexcept { return hash_ <  rhs.hash_; } 
-        bool operator<=(const Hash & rhs) const noexcept { return hash_ <= rhs.hash_; } 
+        Hash(std::vector<uint32_t> && h)
+            : hash_(std::move(h)) { }
 
 
-        /*! \brief Truncate the hash to a size_t
+        Hash() = default;
+        Hash(const Hash &)              = default;
+        Hash & operator=(const Hash &)  = default;
+        Hash(Hash &&)                   = default;
+        Hash & operator=(Hash &&)       = default;
+
+        bool operator==(const Hash & rhs) const { return hash_ == rhs.hash_; } 
+        bool operator!=(const Hash & rhs) const { return hash_ != rhs.hash_; } 
+        bool operator>(const Hash & rhs)  const { return hash_ >  rhs.hash_; } 
+        bool operator>=(const Hash & rhs) const { return hash_ >= rhs.hash_; } 
+        bool operator<(const Hash & rhs)  const { return hash_ <  rhs.hash_; } 
+        bool operator<=(const Hash & rhs) const { return hash_ <= rhs.hash_; } 
+
+
+        /*! \brief Truncate the hash to a given type
          * 
          * Useful if using for a specialization of std::hash
          */
-        size_t truncate(void) const noexcept { return hash_[0]; }
+        template<typename T>
+        T truncate(void) const
+        {
+            static_assert(std::is_fundamental<T>::value,
+                          "Given type must be a fundamental type");
+
+            const size_t wantedbytes = sizeof(T);
+            const size_t nbytes = hash_.size() * 4;
+            if(nbytes >= wantedbytes)
+            {
+                const T * retptr = reinterpret_cast<const T *>(hash_.data());
+                return *retptr;
+            }
+            else
+            {
+                return 0; //! \todo
+            }
+        }
+
 
         /*! \brief Return a string representation of the hash
          *
@@ -56,27 +76,13 @@ class Hash
          * with lower case letters. The length of the string
          * should be 2*bits/8 characters.
          */
-        std::string to_string(void) const
-        {
-            char buf[2*(128/8) + 1]; // 2 chars per byte + null
-
-            const uint8_t * p = reinterpret_cast<const uint8_t *>(hash_.data());
-
-            for(size_t i = 0; i < 128/8; i++)
-                snprintf(buf + 2*i, 3, "%02x", p[i]); // max size is 2 + null
-
-            return std::string(buf);
-        }
+        std::string to_string(void) const;
 
 
     private:
-        friend class HashImpl;
-
         //!< The hash as a number
-        std::array<uint64_t, 2> hash_;
+        std::vector<uint32_t> hash_;
 
-        /*! \brief Construct given the lower and upper 64-bit parts */
-        Hash(uint64_t h1, uint64_t h2) noexcept : hash_{h1, h2} { }
 };
 
 

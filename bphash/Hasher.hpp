@@ -8,12 +8,14 @@
 #ifndef PULSAR_GUARD_BPHASH__HASHER_HPP_
 #define PULSAR_GUARD_BPHASH__HASHER_HPP_
 
-#include <typeinfo>
-#include <cstring>
-
 #include "bphash/HashImpl.hpp"
 #include "bphash/Hash.hpp"
-#include "bphash/Hasher_fwd.hpp" // for DECLARE_HASHING_FRIENDS
+
+
+#include <typeinfo>
+#include <cstring>  // for strlen
+#include <memory>
+
 
 
 namespace bphash {
@@ -21,7 +23,6 @@ namespace bphash {
 
 
 namespace detail {
-
 
 // Object hashers tell how to hash a single type of object (for example, an
 // STL vector). They derive from std::true_type if it is valid to hash
@@ -42,6 +43,16 @@ struct PointerWrapper
 
 
 
+
+
+/*! \brief Type of hash to use */
+enum class HashType
+{
+    Hash128
+};
+
+
+
 /*! \brief Class that is used to hash objects
  *
  * This prevents the need for serializing the whole
@@ -51,7 +62,7 @@ struct PointerWrapper
 class Hasher
 {
     public:
-        Hasher() = default;
+        Hasher(HashType type);
 
         Hasher(const Hasher &)             = delete;
         Hasher & operator=(const Hasher &) = delete;
@@ -96,13 +107,13 @@ class Hasher
          */
         void add_data(void const * data, size_t size)
         {
-            hashimpl_.update(data, size);
+            hashimpl_->update(data, size);
         }
 
 
         /*! \brief Perform any remaining steps and return the hash
          */
-        Hash finalize(void) { return hashimpl_.finalize(); }
+        Hash finalize(void) { return hashimpl_->finalize(); }
 
 
     private:
@@ -138,8 +149,10 @@ class Hasher
 
 
         // Internal hasher object
-        HashImpl hashimpl_;
+        std::unique_ptr<detail::HashImpl> hashimpl_;
 };
+
+
 
 /*! \brief Convenience function for hashing stuff in a single function call
  */
@@ -165,10 +178,10 @@ Hash MakeHashRange(InputIterator first, InputIterator last)
 }
 
 
+
 //////////////////////////////////////////
 // Helper for pointers
 //////////////////////////////////////////
-
 
 /*! \brief Wrap a raw pointer so that it can be hashed */
 template<typename T>
@@ -201,6 +214,7 @@ struct ObjectHasher<PointerWrapper<T>> : public std::true_type
             hasher(0);
     }
 };
+
 
 template<typename T>
 struct ObjectHasher<T *> : public std::true_type

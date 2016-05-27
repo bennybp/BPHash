@@ -14,23 +14,25 @@ namespace {
 template<typename T>
 void TestSingle(const char * type, const T & val)
 {
+    HashType htype = HashType::Hash128;
+
     // raw value
-    Hasher h;
+    Hasher h(htype);
     h(val);
 
     // Raw pointer
     const T * valptr = new T(val);
-    Hasher hptr;
+    Hasher hptr(htype);
     hptr(valptr);
     delete valptr;
 
     // unique_ptr
-    Hasher huptr;
+    Hasher huptr(htype);
     std::unique_ptr<T> uptr(new T(val));
     huptr(uptr);
 
     // shared_ptr
-    Hasher hsptr;
+    Hasher hsptr(htype);
     std::shared_ptr<T> sptr(new T(val));
     hsptr(sptr);
 
@@ -41,10 +43,10 @@ void TestSingle(const char * type, const T & val)
 
     // output the results
     std::cout << "  " << type << "\n";
-    std::cout << "            normal: " << val_hash.to_string() << "\n";
-    std::cout << "           raw ptr: " << ptr_hash.to_string() << "\n";
-    std::cout << "        unique_ptr: " << uptr_hash.to_string() << "\n";
-    std::cout << "        shared_ptr: " << sptr_hash.to_string() << "\n";
+    std::cout << "            normal: " << val_hash.to_string()  << "  Trunc: " << val_hash.truncate<size_t>() << "\n";
+    std::cout << "           raw ptr: " << ptr_hash.to_string()  << "  Trunc: " << ptr_hash.truncate<size_t>() << "\n";
+    std::cout << "        unique_ptr: " << uptr_hash.to_string() << "  Trunc: " << uptr_hash.truncate<size_t>() << "\n";
+    std::cout << "        shared_ptr: " << sptr_hash.to_string() << "  Trunc: " << sptr_hash.truncate<size_t>() << "\n";
 
     found_hashes_.push_back(std::move(val_hash));
     found_hashes_.push_back(std::move(ptr_hash));
@@ -159,9 +161,6 @@ struct MyStruct
 
 int main(void)
 {
-    Hasher h;
-
-
     // integer values to test
     std::vector<long> inttest{0,  1,  10,  100,
                                  -1, -10, -100};
@@ -184,7 +183,6 @@ int main(void)
     for(auto i : inttest)
     {
         std::cout << "\nTesting integer value = " << i << "\n";
-        TestSingle<char              >("char",               i);
         TestSingle<unsigned char     >("unsigned char",      i);
         TestSingle<unsigned short    >("unsigned short",     i);
         TestSingle<unsigned int      >("unsigned int",       i);

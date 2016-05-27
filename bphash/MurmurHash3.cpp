@@ -5,7 +5,7 @@
  */
 
 
-#include "bphash/HashImpl.hpp"
+#include "bphash/MurmurHash3.hpp"
 #include "bphash/Hash.hpp"
 
 
@@ -27,11 +27,6 @@
 /////////////////////////////////////////////////////////////////
 
 
-namespace bphash {
-
-
-namespace detail {
-
 //////////////////////////////////////////
 // Some small functions for the hash algo
 //////////////////////////////////////////
@@ -52,7 +47,10 @@ static inline uint64_t fmix64 ( uint64_t k )
   return k;
 }
 
-} // close namespace detail
+
+
+namespace bphash {
+namespace detail {
 
 
 
@@ -60,13 +58,13 @@ static inline uint64_t fmix64 ( uint64_t k )
 // Public functions
 ////////////////////////////////
 
-HashImpl::HashImpl(void)
+MurmurHash3::MurmurHash3(void)
 {
     reset();
 }
 
 
-void HashImpl::reset(void)
+void MurmurHash3::reset(void)
 {
     h1 = h2 = 0;
     len_ = 0;
@@ -75,7 +73,7 @@ void HashImpl::reset(void)
 }
 
 
-void HashImpl::update(void const * buffer, size_t size)
+void MurmurHash3::update(void const * buffer, size_t size)
 {
     if(size == 0)
         return; // got nothing to do
@@ -143,7 +141,7 @@ void HashImpl::update(void const * buffer, size_t size)
 }
 
 
-Hash HashImpl::finalize(void)
+Hash MurmurHash3::finalize(void)
 {
     // If we have any left over, we have to do that
     if(nbuffer_ > 0)
@@ -162,7 +160,7 @@ Hash HashImpl::finalize(void)
             case 11: k2 ^= ((uint64_t)tail[10]) << 16;
             case 10: k2 ^= ((uint64_t)tail[ 9]) << 8;
             case  9: k2 ^= ((uint64_t)tail[ 8]) << 0;
-                     k2 *= c2; k2  = detail::rotl64(k2,33); k2 *= c1; h2 ^= k2;
+                     k2 *= c2; k2  = rotl64(k2,33); k2 *= c1; h2 ^= k2;
 
             case  8: k1 ^= ((uint64_t)tail[ 7]) << 56;
             case  7: k1 ^= ((uint64_t)tail[ 6]) << 48;
@@ -172,7 +170,7 @@ Hash HashImpl::finalize(void)
             case  3: k1 ^= ((uint64_t)tail[ 2]) << 16;
             case  2: k1 ^= ((uint64_t)tail[ 1]) << 8;
             case  1: k1 ^= ((uint64_t)tail[ 0]) << 0;
-                     k1 *= c1; k1  = detail::rotl64(k1,31); k1 *= c2; h1 ^= k1;
+                     k1 *= c1; k1  = rotl64(k1,31); k1 *= c2; h1 ^= k1;
         };
     }
 
@@ -185,21 +183,26 @@ Hash HashImpl::finalize(void)
     h1 += h2;
     h2 += h1;
 
-    h1 = detail::fmix64(h1);
-    h2 = detail::fmix64(h2);
+    h1 = fmix64(h1);
+    h2 = fmix64(h2);
 
     h1 += h2;
     h2 += h1;
 
     // Create the hash object and return
-    return Hash(h1, h2);
+    std::vector<uint32_t> hvec{ static_cast<uint32_t>(h1),
+                                static_cast<uint32_t>(h1 >> 32),
+                                static_cast<uint32_t>(h2),
+                                static_cast<uint32_t>(h2 >> 32) };
+                                
+    return Hash(std::move(hvec));
 }
 
 
 ////////////////////////////////
 // Private member functions
 ////////////////////////////////
-void HashImpl::update_block_(void)
+void MurmurHash3::update_block_(void)
 {
     // This function only does an entire 16-byte buffer
     // (that is stored as private member buffer_)
@@ -208,18 +211,19 @@ void HashImpl::update_block_(void)
     uint64_t k1 = block64[0];
     uint64_t k2 = block64[1];
 
-    k1 *= c1; k1  = detail::rotl64(k1,31); k1 *= c2; h1 ^= k1;
+    k1 *= c1; k1  = rotl64(k1,31); k1 *= c2; h1 ^= k1;
 
-    h1 = detail::rotl64(h1,27); h1 += h2; h1 = h1*5+0x52dce729;
+    h1 = rotl64(h1,27); h1 += h2; h1 = h1*5+0x52dce729;
 
-    k2 *= c2; k2  = detail::rotl64(k2,33); k2 *= c1; h2 ^= k2;
+    k2 *= c2; k2  = rotl64(k2,33); k2 *= c1; h2 ^= k2;
 
-    h2 = detail::rotl64(h2,31); h2 += h1; h2 = h2*5+0x38495ab5;
+    h2 = rotl64(h2,31); h2 += h1; h2 = h2*5+0x38495ab5;
 
     // update how much we've actually hashed
     len_ += 16;
 }
 
 
+} // close namespace detail
 } // close namespace bphash
 

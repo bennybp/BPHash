@@ -1,5 +1,7 @@
 # This is the main library
-add_library(bphash STATIC HashImpl.cpp)
+add_library(bphash STATIC Hasher.cpp
+                          Hash.cpp
+                          MurmurHash3.cpp)
 
 # Include the main source directory (my parent) as an include directory
 target_include_directories(bphash PRIVATE ${CMAKE_SOURCE_DIR})
