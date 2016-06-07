@@ -1,0 +1,23 @@
+# Path to this file and the parent directories
+set(BPHASH_CONFIG_PATH ${CMAKE_CURRENT_LIST_DIR})
+get_filename_component(BPHASH_PREFIX_PATH ${BPHASH_CONFIG_PATH} DIRECTORY)
+get_filename_component(BPHASH_PREFIX_PATH ${BPHASH_PREFIX_PATH} DIRECTORY)
+get_filename_component(BPHASH_PREFIX_PATH ${BPHASH_PREFIX_PATH} DIRECTORY)
+
+
+# The bphash library we want to link to
+find_library(BPHASH_LIBRARY
+             NAMES bphash
+             PATHS ${BPHASH_PREFIX_PATH}/lib
+             NO_DEFAULT_PATH)
+
+# The include directory
+find_path(BPHASH_INCLUDE_PATH
+          NAMES bphash/Hash.hpp
+          PATHS ${BPHASH_PREFIX_PATH}/include
+          NO_DEFAULT_PATH)
+
+# This interface library
+add_library(bphash INTERFACE)
+target_include_directories(bphash INTERFACE ${BPHASH_INCLUDE_PATH})
+target_link_libraries(bphash INTERFACE ${BPHASH_LIBRARY})

@@ -29,5 +29,5 @@ install(TARGETS bphash
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
-# Install the headers headers
+# Install the headers
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp")
