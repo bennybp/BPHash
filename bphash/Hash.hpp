@@ -14,21 +14,29 @@
 namespace bphash {
  
 
-/*! \brief A hash of some data
+/*! \brief The hash of some data
  *
- * The length is left unspecified to the end user, but
- * is currently 128-bit.
+ * This is the main result of hashing.
  *
- * A hash can only be constructed from within a HashImpl object
+ * This class also allows for comparison between different
+ * hashes.
  */
 class Hash
 {
     public:
-        /*! \brief Construct given 32-bit components */
-        Hash(const std::vector<uint32_t> & h)
+        /*! \brief Constructor
+         *
+         * \param [in] h 32-bit components of the hash  
+         */
+        Hash(const std::vector<uint8_t> & h)
             : hash_(h) { }
 
-        Hash(std::vector<uint32_t> && h)
+
+        /*! \brief Constructor
+         *
+         * \param [in] h 32-bit components of the hash  
+         */
+        Hash(std::vector<uint8_t> && h)
             : hash_(std::move(h)) { }
 
 
@@ -46,27 +54,37 @@ class Hash
         bool operator<=(const Hash & rhs) const { return hash_ <= rhs.hash_; } 
 
 
-        /*! \brief Truncate the hash to a given type
+        /*! \brief Truncate the hash to a given size
          * 
-         * Useful if using for a specialization of std::hash
+         * If the desired size is larger than the size of the stored hash,
+         * it is padded with zero.
+         *
+         * \param [in] nbytes Desired size of the new hash (in bytes)
+         */
+        Hash truncate(size_t nbytes) const;
+
+
+        /*! \brief Convert the hash to a given type
+         * 
+         * If the type is larger than the stored hash, it is padded
+         * with zeros.
+         *
+         * \tparam The type to truncate to. Must be an arithmetic type.
          */
         template<typename T>
-        T truncate(void) const
+        T convert(void) const
         {
-            static_assert(std::is_fundamental<T>::value,
-                          "Given type must be a fundamental type");
+            static_assert(std::is_arithmetic<T>::value,
+                          "Type to truncate to must be an arithmetic type");
 
             const size_t wantedbytes = sizeof(T);
-            const size_t nbytes = hash_.size() * 4;
-            if(nbytes >= wantedbytes)
-            {
-                const T * retptr = reinterpret_cast<const T *>(hash_.data());
-                return *retptr;
-            }
-            else
-            {
-                return 0; //! \todo
-            }
+            Hash tmphash = truncate(wantedbytes); // will pad with zero
+
+            T ret = 0;
+            for(size_t i = 0; i < wantedbytes; i++)
+                ret |= static_cast<T>(tmphash.hash_[i]) << (i*8);
+
+            return ret;
         }
 
 
@@ -74,15 +92,14 @@ class Hash
          *
          * The string representation is the usual hex representation,
          * with lower case letters. The length of the string
-         * should be 2*bits/8 characters.
+         * should be 2*number_of_bits/8 characters.
          */
         std::string to_string(void) const;
 
 
     private:
-        //!< The hash as a number
-        std::vector<uint32_t> hash_;
-
+        //!< The hash as a series of 8-bit components
+        std::vector<uint8_t> hash_;
 };
 
 
