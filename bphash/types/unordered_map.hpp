@@ -1,26 +1,22 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::unordered_map
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__UNORDERED_MAP_HPP_
-#define PULSAR_GUARD_TYPES__UNORDERED_MAP_HPP_
+#ifndef BPHASH_GUARD_UNORDERED_MAP_HPP_
+#define BPHASH_GUARD_UNORDERED_MAP_HPP_
 
-#include <unordered_map>
 #include "bphash/types/ContainerHelper.hpp"
-#include "bphash/types/utility.hpp"
+#include <unordered_map>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-///////////////
-// unordered_map
-///////////////
+/*! \brief Hashing of std::unordered_map */
 template<typename Key, typename T, typename HashT, typename Pred, typename Alloc>
-struct ObjectHasher<std::unordered_map<Key, T, HashT, Pred, Alloc>>
-    : public ContainerHasher<std::unordered_map<Key, T, HashT, Pred, Alloc>> { };
+struct ObjectHasher<std::unordered_map<Key, T, HashT, Pred, Alloc>> : public ContainerHasher<std::unordered_map<Key, T, HashT, Pred, Alloc>> { };
 
 
 } // close namespace detail

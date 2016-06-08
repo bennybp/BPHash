@@ -4,14 +4,12 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
 #include "bphash/Hash.hpp"
-
 #include <cstring>
 
 
 namespace bphash {
- 
+
 
 std::string hash_to_string(const HashValue & hash)
 {

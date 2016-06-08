@@ -1,5 +1,11 @@
-#ifndef PULSAR_GUARD_TYPES__ALL_HPP_
-#define PULSAR_GUARD_TYPES__ALL_HPP_
+/*! \file
+ *
+ * \brief A convenience header that includes all the types supported by bphash
+ * \author Benjamin Pritchard (ben@bennyp.org)
+ */
+
+#ifndef BPHASH_GUARD_ALL_HPP_
+#define BPHASH_GUARD_ALL_HPP_
 
 #include "bphash/types/array.hpp"
 #include "bphash/types/complex.hpp"

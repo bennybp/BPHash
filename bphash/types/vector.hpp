@@ -1,26 +1,22 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::vector
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__VECTOR_HPP_
-#define PULSAR_GUARD_TYPES__VECTOR_HPP_
+#ifndef BPHASH_GUARD_VECTOR_HPP_
+#define BPHASH_GUARD_VECTOR_HPP_
 
-#include <vector>
 #include "bphash/types/ContainerHelper.hpp"
+#include <vector>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-///////////////
-// vector
-///////////////
+/*! \brief Hashing of std::vector */
 template<typename T, typename Alloc>
-struct ObjectHasher<std::vector<T, Alloc>>
-    : public ContainerHasher<std::vector<T, Alloc>> { };
+struct ObjectHasher<std::vector<T, Alloc>> : public ContainerHasher<std::vector<T, Alloc>> { };
 
 
 } // close namespace detail

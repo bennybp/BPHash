@@ -1,26 +1,22 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::string
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__STRING_HPP_
-#define PULSAR_GUARD_TYPES__STRING_HPP_
+#ifndef BPHASH_GUARD_STRING_HPP_
+#define BPHASH_GUARD_STRING_HPP_
 
 //#include <string> // included via ContainerHelper
 #include "bphash/types/ContainerHelper.hpp"
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-///////////////
-// string
-///////////////
+/*! \brief Hashing of std::string */
 template<typename charT, typename Traits, typename Alloc>
-struct ObjectHasher<std::basic_string<charT, Traits, Alloc>>
-    : public ContainerHasher<std::basic_string<charT, Traits, Alloc>> { };
+struct ObjectHasher<std::basic_string<charT, Traits, Alloc>> : public ContainerHasher<std::basic_string<charT, Traits, Alloc>> { };
 
 
 } // close namespace detail

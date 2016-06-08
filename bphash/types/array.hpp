@@ -1,26 +1,22 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::array
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__ARRAY_HPP_
-#define PULSAR_GUARD_TYPES__ARRAY_HPP_
+#ifndef BPHASH_GUARD_ARRAY_HPP_
+#define BPHASH_GUARD_ARRAY_HPP_
 
-#include <array>
 #include "bphash/types/ContainerHelper.hpp"
+#include <array>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-///////////////
-// array
-///////////////
+/*! \brief Hashing of std::array */
 template<typename T, size_t N>
-struct ObjectHasher<std::array<T, N>>
-    : public ContainerHasher<std::array<T, N>> { };
+struct ObjectHasher<std::array<T, N>> : public ContainerHasher<std::array<T, N>> { };
 
 
 } // close namespace detail

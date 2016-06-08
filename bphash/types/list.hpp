@@ -1,26 +1,22 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::list
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__LIST_HPP_
-#define PULSAR_GUARD_TYPES__LIST_HPP_
+#ifndef BPHASH_GUARD_LIST_HPP_
+#define BPHASH_GUARD_LIST_HPP_
 
-#include <list>
 #include "bphash/types/ContainerHelper.hpp"
+#include <list>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-///////////////
-// list
-///////////////
+/*! \brief Hashing of std::list */
 template<typename T, typename Alloc>
-struct ObjectHasher<std::list<T, Alloc>>
-    : public ContainerHasher<std::list<T, Alloc>> { };
+struct ObjectHasher<std::list<T, Alloc>> : public ContainerHasher<std::list<T, Alloc>> { };
 
 
 } // close namespace detail

@@ -1,27 +1,23 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::map
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__MAP_HPP_
-#define PULSAR_GUARD_TYPES__MAP_HPP_
+#ifndef BPHASH_GUARD_MAP_HPP_
+#define BPHASH_GUARD_MAP_HPP_
 
-#include <map>
 #include "bphash/types/ContainerHelper.hpp"
-#include "bphash/types/utility.hpp"
+#include <map>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-///////////////
-// map
-///////////////
+/*! \brief Hashing of std::map */
 template<typename Key, typename T, typename Compare, typename Alloc>
 struct ObjectHasher<std::map<Key, T, Compare, Alloc>>
-    : public ContainerHasher<std::map<Key, T, Compare, Alloc>> { };
+            : public ContainerHasher<std::map<Key, T, Compare, Alloc>> { };
 
 
 } // close namespace detail

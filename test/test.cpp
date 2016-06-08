@@ -295,6 +295,10 @@ int main(void)
         TestContainers<const char *>("const char *", strtest.begin(), strtest.begin() + i + 1);
     }
 
+    std::unordered_map<std::string, std::string> mymap {{"Hi", "4" }};
+    TestSingle("Map", mymap);
+    std::tuple<int, std::string> mytup{4, "HAJSD"};
+    TestSingle("MyTuple", mytup);
 
     std::cout << "\n";
     std::cout << "==============================================================================\n";

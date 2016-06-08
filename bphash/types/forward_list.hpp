@@ -1,26 +1,22 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief Hashing of std::forward_list
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__FORWARD_LIST_HPP_
-#define PULSAR_GUARD_TYPES__FORWARD_LIST_HPP_
+#ifndef BPHASH_GUARD_FORWARD_LIST_HPP_
+#define BPHASH_GUARD_FORWARD_LIST_HPP_
 
-#include <forward_list>
 #include "bphash/types/ContainerHelper.hpp"
+#include <forward_list>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-///////////////
-// list
-///////////////
+/*! \brief Hashing of std::forward_list */
 template<typename T, typename Alloc>
-struct ObjectHasher<std::forward_list<T, Alloc>>
-    : public ContainerHasher<std::forward_list<T, Alloc>> { };
+struct ObjectHasher<std::forward_list<T, Alloc>> : public ContainerHasher<std::forward_list<T, Alloc>> { };
 
 
 } // close namespace detail

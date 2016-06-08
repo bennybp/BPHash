@@ -1,23 +1,20 @@
 /*! \file
  *
- * \brief A class that hashes std::complex objects
+ * \brief Hashing of std::complex
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__COMPLEX_HPP_
-#define PULSAR_GUARD_TYPES__COMPLEX_HPP_
+#ifndef BPHASH_GUARD_COMPLEX_HPP_
+#define BPHASH_GUARD_COMPLEX_HPP_
 
-#include <complex>
 #include "bphash/Hasher.hpp"
+#include <complex>
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-//////////////////////////////////////////
-// Complex type
-//////////////////////////////////////////
+/*! \brief Hashing of std::complex */
 template<typename T>
 struct ObjectHasher<std::complex<T>> : public std::true_type
 {

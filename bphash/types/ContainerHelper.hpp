@@ -5,18 +5,15 @@
  */
 
 
-#ifndef PULSAR_GUARD_TYPES__CONTAINERHELPER_HPP_
-#define PULSAR_GUARD_TYPES__CONTAINERHELPER_HPP_
+#ifndef BPHASH_GUARD_CONTAINERHELPER_HPP_
+#define BPHASH_GUARD_CONTAINERHELPER_HPP_
 
 #include "bphash/Hasher.hpp"
 
-namespace bphash{
+namespace bphash {
 namespace detail {
 
-
-//////////////////////////////////////////
-// Helper for STL containers
-//////////////////////////////////////////
+/*! \brief Helper for hashing STL containers */
 template<typename Cont>
 struct ContainerHasher : public std::true_type
 {
@@ -26,6 +23,7 @@ struct ContainerHasher : public std::true_type
         // some containers don't have size() (ie, forward_list)
         size_t d = static_cast<size_t>(std::distance(cont.begin(), cont.end()));
         hasher(d);
+
         for(const auto & it : cont)
             hasher(it);
     }

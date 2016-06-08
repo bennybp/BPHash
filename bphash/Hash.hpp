@@ -4,8 +4,8 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-#ifndef PULSAR_GUARD_BPHASH__HASH_HPP_
-#define PULSAR_GUARD_BPHASH__HASH_HPP_
+#ifndef BPHASH_GUARD_HASH_HPP_
+#define BPHASH_GUARD_HASH_HPP_
 
 #include <cstdint>
 #include <vector>
@@ -13,11 +13,12 @@
 
 namespace bphash {
 
+//! Storage of a hash
 typedef std::vector<uint8_t> HashValue;
 
 
 /*! \brief Truncate the hash to a given size
- * 
+ *
  * If the desired size is larger than the size of the size of
  * the given hash, the new hash is padded with zeroes.
  *
@@ -29,13 +30,14 @@ HashValue truncate_hash(const HashValue & hash, size_t nbytes);
 
 
 /*! \brief Convert the hash to a given type
- * 
+ *
  * If the type is larger than the stored hash, it is padded
  * with zeros. Otherwise, it is truncated.
  *
  * \tparam The type to convert to. Must be an arithmetic type.
  *
  * \param [in] hash The hash to convert
+ * \return The hash converted to an arithmetic type
  */
 template<typename T>
 T convert_hash(const HashValue & hash)
@@ -46,9 +48,13 @@ T convert_hash(const HashValue & hash)
     const size_t wantedbytes = sizeof(T);
     HashValue tmphash = truncate_hash(hash, wantedbytes); // will pad with zero
 
-    T ret = 0;
+    T ret = static_cast<T>(0);
+
+    // i = number of bytes, so i*8 is the
+    //     number of bits to shift
     for(size_t i = 0; i < wantedbytes; i++)
         ret |= static_cast<T>(tmphash[i]) << (i*8);
+
 
     return ret;
 }
@@ -59,6 +65,9 @@ T convert_hash(const HashValue & hash)
  * The string representation is the usual hex representation,
  * with lower case letters. The length of the string
  * should be 2*number_of_bits/8 characters.
+ *
+ * \param [in] hash The hash to convert
+ * \return A string representing the hash
  */
 std::string hash_to_string(const HashValue & hash);
 

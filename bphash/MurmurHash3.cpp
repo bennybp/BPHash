@@ -1,6 +1,6 @@
 /*! \file
  *
- * \brief A class for hashing data (source)
+ * \brief MurmurHash3 hash implementation (source)
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
@@ -106,7 +106,7 @@ void MurmurHash3::update(void const * buffer, size_t size)
     std::copy(data, data + dataidx, buffer_.begin() + nbuffer_);
 
 
-    do 
+    do
     {
         // Hash what is currently in the buffer
         update_block_();
@@ -121,7 +121,7 @@ void MurmurHash3::update(void const * buffer, size_t size)
         size_t tocopy = 16;
 
         // Is here some left in data that won't fill the buffer?
-        if((dataidx + 16) >= size)    
+        if((dataidx + 16) >= size)
             tocopy = size - dataidx;
 
         // Actually copy the data to the internal buffer
@@ -133,10 +133,10 @@ void MurmurHash3::update(void const * buffer, size_t size)
 
         // How much is in the buffer
         nbuffer_ = ntodo;
-        
+
     } while(ntodo >= 16);
 
-    // Any remainder/tail will be left in the buffer for next time        
+    // Any remainder/tail will be left in the buffer for next time
 }
 
 

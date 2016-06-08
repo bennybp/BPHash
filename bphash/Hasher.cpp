@@ -1,6 +1,6 @@
 /*! \file
  *
- * \brief A class that hashes objects
+ * \brief A class that hashes objects (source)
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
@@ -22,6 +22,7 @@ Hasher::Hasher(HashType type)
         case HashType::Hash128:
             hashimpl_ = std::unique_ptr<detail::HashImpl>(new detail::MurmurHash3);
             break;
+
         default:
             throw std::logic_error("Unhandled HashType");
     }
