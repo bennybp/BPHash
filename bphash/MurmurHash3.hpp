@@ -13,13 +13,6 @@
 #include "bphash/HashImpl.hpp"
 
 namespace bphash{
-
-
-// forward declare
-class Hash;
-
-
-
 namespace detail {
 
 
@@ -75,7 +68,7 @@ class MurmurHash3 : public HashImpl
          * Any remaining data (that doesn't fill out a block) will be done.
          * Then, any finalization steps will be done and the hash returned. 
          */
-        virtual Hash finalize(void);
+        virtual HashValue finalize(void);
 
         /*! \brief Zero out the hash
          * 

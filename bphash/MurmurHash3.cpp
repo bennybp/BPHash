@@ -6,7 +6,6 @@
 
 
 #include "bphash/MurmurHash3.hpp"
-#include "bphash/Hash.hpp"
 
 
 
@@ -141,7 +140,7 @@ void MurmurHash3::update(void const * buffer, size_t size)
 }
 
 
-Hash MurmurHash3::finalize(void)
+HashValue MurmurHash3::finalize(void)
 {
     // If we have any left over, we have to do that
     if(nbuffer_ > 0)
@@ -190,24 +189,22 @@ Hash MurmurHash3::finalize(void)
     h2 += h1;
 
     // Create the hash object and return
-    std::vector<uint8_t> hvec{ static_cast<uint8_t>(h1),
-                               static_cast<uint8_t>(h1 >> 8),
-                               static_cast<uint8_t>(h1 >> 16),
-                               static_cast<uint8_t>(h1 >> 24),
-                               static_cast<uint8_t>(h1 >> 32),
-                               static_cast<uint8_t>(h1 >> 40),
-                               static_cast<uint8_t>(h1 >> 48),
-                               static_cast<uint8_t>(h1 >> 56),
-                               static_cast<uint8_t>(h2),
-                               static_cast<uint8_t>(h2 >> 8),
-                               static_cast<uint8_t>(h2 >> 16),
-                               static_cast<uint8_t>(h2 >> 24),
-                               static_cast<uint8_t>(h2 >> 32),
-                               static_cast<uint8_t>(h2 >> 40),
-                               static_cast<uint8_t>(h2 >> 48),
-                               static_cast<uint8_t>(h2 >> 56) };
-                                
-    return Hash(std::move(hvec));
+    return HashValue{ static_cast<uint8_t>(h1),
+                      static_cast<uint8_t>(h1 >> 8),
+                      static_cast<uint8_t>(h1 >> 16),
+                      static_cast<uint8_t>(h1 >> 24),
+                      static_cast<uint8_t>(h1 >> 32),
+                      static_cast<uint8_t>(h1 >> 40),
+                      static_cast<uint8_t>(h1 >> 48),
+                      static_cast<uint8_t>(h1 >> 56),
+                      static_cast<uint8_t>(h2),
+                      static_cast<uint8_t>(h2 >> 8),
+                      static_cast<uint8_t>(h2 >> 16),
+                      static_cast<uint8_t>(h2 >> 24),
+                      static_cast<uint8_t>(h2 >> 32),
+                      static_cast<uint8_t>(h2 >> 40),
+                      static_cast<uint8_t>(h2 >> 48),
+                      static_cast<uint8_t>(h2 >> 56) };
 }
 
 

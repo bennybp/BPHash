@@ -14,7 +14,9 @@ struct StdHash
         //! \todo replace with Hash64 if available?
         Hasher h(HashType::Hash128);
         h(obj);
-        return h.finalize().truncate<size_t>();
+
+        HashValue hashval = h.finalize();
+        return convert_hash<size_t>(hashval);
     }
 };
 

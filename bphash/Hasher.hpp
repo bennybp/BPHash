@@ -113,7 +113,7 @@ class Hasher
 
         /*! \brief Perform any remaining steps and return the hash
          */
-        Hash finalize(void) { return hashimpl_->finalize(); }
+        HashValue finalize(void) { return hashimpl_->finalize(); }
 
 
     private:
@@ -157,7 +157,7 @@ class Hasher
 /*! \brief Convenience function for hashing stuff in a single function call
  */
 template<typename ... Targs>
-Hash MakeHash(const Targs &... args)
+HashValue MakeHash(const Targs &... args)
 {
     Hasher hasher;
     hasher(args...);
@@ -168,7 +168,7 @@ Hash MakeHash(const Targs &... args)
 /*! \brief Convenience function for a range from a container
  */
 template<typename InputIterator>
-Hash MakeHashRange(InputIterator first, InputIterator last)
+HashValue MakeHashRange(InputIterator first, InputIterator last)
 {
     Hasher hasher;
 

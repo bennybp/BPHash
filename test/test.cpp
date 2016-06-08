@@ -7,7 +7,7 @@
 using namespace bphash;
 
 namespace {
-    std::vector<Hash> found_hashes_;
+    std::vector<HashValue> found_hashes_;
 }
 
 
@@ -36,17 +36,28 @@ void TestSingle(const char * type, const T & val)
     std::shared_ptr<T> sptr(new T(val));
     hsptr(sptr);
 
-    Hash val_hash = h.finalize();
-    Hash ptr_hash = hptr.finalize();
-    Hash uptr_hash = huptr.finalize();
-    Hash sptr_hash = hsptr.finalize();
+    HashValue val_hash = h.finalize();
+    HashValue ptr_hash = hptr.finalize();
+    HashValue uptr_hash = huptr.finalize();
+    HashValue sptr_hash = hsptr.finalize();
 
     // output the results
     std::cout << "  " << type << "\n";
-    std::cout << "            normal: " << val_hash.to_string()  << "  Trunc: " << val_hash.truncate(8).convert<size_t>() << "\n";
-    std::cout << "           raw ptr: " << ptr_hash.to_string()  << "  Trunc: " << ptr_hash.truncate(8).convert<size_t>() << "\n";
-    std::cout << "        unique_ptr: " << uptr_hash.to_string() << "  Trunc: " << uptr_hash.truncate(8).convert<size_t>() << "\n";
-    std::cout << "        shared_ptr: " << sptr_hash.to_string() << "  Trunc: " << sptr_hash.truncate(8).convert<size_t>() << "\n";
+    std::cout << "            normal: " << hash_to_string(val_hash) 
+              << "    Trunc: " << hash_to_string(truncate_hash(val_hash, 8)) << "\n"
+              << "                                                      Convert: " << convert_hash<size_t>(val_hash) << "\n";
+
+    std::cout << "           raw ptr: " << hash_to_string(ptr_hash)
+              << "    Trunc: " << hash_to_string(truncate_hash(ptr_hash, 8)) << "\n"
+              << "                                                      Convert: " << convert_hash<size_t>(ptr_hash) << "\n";
+
+    std::cout << "        unique_ptr: " << hash_to_string(uptr_hash)
+              << "    Trunc: " << hash_to_string(truncate_hash(uptr_hash, 8)) << "\n"
+              << "                                                      Convert: " << convert_hash<size_t>(uptr_hash) << "\n";
+
+    std::cout << "        shared_ptr: " << hash_to_string(sptr_hash)
+              << "    Trunc: " << hash_to_string(truncate_hash(sptr_hash, 8)) << "\n"
+              << "                                                      Convert: " << convert_hash<size_t>(sptr_hash) << "\n";
 
     found_hashes_.push_back(std::move(val_hash));
     found_hashes_.push_back(std::move(ptr_hash));
@@ -293,7 +304,7 @@ int main(void)
     auto dup = std::adjacent_find(found_hashes_.begin(), found_hashes_.end());
     if(dup != found_hashes_.end())
     {
-        std::cout << "DUPLICATE FOUND: " << dup->to_string() << "\n";
+        std::cout << "DUPLICATE FOUND: " << hash_to_string(*dup) << "\n";
         return 1;
     }
     else

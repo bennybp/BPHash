@@ -7,17 +7,13 @@
 #ifndef PULSAR_GUARD_BPHASH__HASHIMPL_HPP_
 #define PULSAR_GUARD_BPHASH__HASHIMPL_HPP_
 
+#include "bphash/Hash.hpp"
+
 #include <cstdlib>
 
-
 namespace bphash{
-
-
-// forward declare
-class Hash;
-
-
 namespace detail {
+
 
 class HashImpl
 {
@@ -35,7 +31,7 @@ class HashImpl
          * Any remaining data (that doesn't fill out a block) will be done.
          * Then, any finalization steps will be done and the hash returned. 
          */
-        virtual Hash finalize(void) = 0;
+        virtual HashValue finalize(void) = 0;
 
         /*! \brief Zero out the hash
          * 
