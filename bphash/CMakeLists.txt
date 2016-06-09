@@ -1,3 +1,6 @@
+# Additional compilation flags
+set(BPHASH_EXTRA_CXX_FLAGS "" CACHE BOOL "Additional compilations flags for the BPHash library (semicolon-separated)")
+
 # This is the main library
 add_library(bphash STATIC Hasher.cpp
                           Hash.cpp
@@ -13,13 +16,18 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
 
     #   383  : value copied to temporary, reference to temporary used (generally ok in c++)
     #   981  : operands are evaluated in unspecified order (generally ok in c++)
+    #   444  : destructor for base class .. not virtual (even warns for classes without virtual functions)
+    #  1418  : external function definition with no prior declaration
     list(APPEND BPHASH_CXX_FLAGS "-wd383")
     list(APPEND BPHASH_CXX_FLAGS "-wd981")
+    list(APPEND BPHASH_CXX_FLAGS "-wd444")
+    list(APPEND BPHASH_CXX_FLAGS "-wd1418")
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     list(APPEND BPHASH_CXX_FLAGS "-std=c++11")
     list(APPEND BPHASH_CXX_FLAGS "-Wall;-Wextra;-pedantic")
 endif()
 
+list(APPEND BPHASH_CXX_FLAGS ${BPHASH_EXTRA_CXX_FLAGS})
 
 target_compile_options(bphash PRIVATE ${BPHASH_CXX_FLAGS})
 
