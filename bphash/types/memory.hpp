@@ -80,7 +80,7 @@ template<typename T, typename Deleter>
 struct ObjectHasher<std::unique_ptr<T, Deleter>> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const std::unique_ptr<T, Deleter> & obj)
+    hash(Hasher & hasher, const std::unique_ptr<T, Deleter> & obj)
     {
         hasher(HashPointer(obj));
     }
@@ -96,7 +96,7 @@ template<typename T>
 struct ObjectHasher<std::shared_ptr<T>> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const std::shared_ptr<T> & obj)
+    hash(Hasher & hasher, const std::shared_ptr<T> & obj)
     {
         hasher(HashPointer(obj));
     }

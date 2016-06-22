@@ -19,7 +19,7 @@ template<typename T1, typename T2>
 struct ObjectHasher<std::pair<T1, T2>> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const std::pair<T1, T2> & obj)
+    hash(Hasher & hasher, const std::pair<T1, T2> & obj)
     {
         hasher(obj.first, obj.second);
     }

@@ -19,7 +19,7 @@ template<typename T>
 struct ObjectHasher<std::complex<T>> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const std::complex<T> & obj)
+    hash(Hasher & hasher, const std::complex<T> & obj)
     {
         hasher(obj.real(), obj.imag());
     }

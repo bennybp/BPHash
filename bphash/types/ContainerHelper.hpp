@@ -18,7 +18,7 @@ template<typename Cont>
 struct ContainerHasher : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const Cont & cont)
+    hash(Hasher & hasher, const Cont & cont)
     {
         // some containers don't have size() (ie, forward_list)
         size_t d = static_cast<size_t>(std::distance(cont.begin(), cont.end()));

@@ -158,7 +158,7 @@ class Hasher
         typename std::enable_if<detail::ObjectHasher<T>::value, void>::type
         hash_single_(const T & obj)
         {
-            detail::ObjectHasher<T>::Hash(*this, obj);
+            detail::ObjectHasher<T>::hash(*this, obj);
         }
 
 
@@ -189,7 +189,7 @@ class Hasher
  * \param [in] args Objects to hash
  */
 template<typename ... Targs>
-HashValue MakeHash(HashType type, const Targs &... args)
+HashValue make_hash(HashType type, const Targs &... args)
 {
     Hasher hasher(type);
     hasher(args...);
@@ -248,7 +248,7 @@ template<typename T>
 struct ObjectHasher<PointerWrapper<T>> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const PointerWrapper<T> & obj)
+    hash(Hasher & hasher, const PointerWrapper<T> & obj)
     {
         if(obj.ptr != nullptr)
         {
@@ -273,7 +273,7 @@ template<typename T>
 struct ObjectHasher<T *> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const T * obj)
+    hash(Hasher & hasher, const T * obj)
     {
         hasher(HashPointer(obj, 1));
     }
@@ -290,7 +290,7 @@ template<>
 struct ObjectHasher<const char *> : public std::true_type
 {
     static void
-    Hash(Hasher & hasher, const char * obj)
+    hash(Hasher & hasher, const char * obj)
     {
         hasher(HashPointer(obj, strlen(obj)));
     }
@@ -304,7 +304,7 @@ struct ObjectHasher<const char *> : public std::true_type
 #define DECLARE_FUNDAMENTAL_HASHER(type) \
     template<> struct ObjectHasher<type> : public std::true_type \
     {\
-        static void Hash(Hasher & hasher, const type & obj) \
+        static void hash(Hasher & hasher, const type & obj) \
         {\
             hasher.add_data(static_cast<void const *>(&obj), \
                             static_cast<size_t>(sizeof(type))); \

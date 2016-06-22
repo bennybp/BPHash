@@ -9,6 +9,7 @@
 #define BPHASH_GUARD_MAP_HPP_
 
 #include "bphash/types/ContainerHelper.hpp"
+#include "bphash/types/utility.hpp"
 #include <map>
 
 namespace bphash {

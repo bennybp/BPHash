@@ -37,7 +37,7 @@ struct ObjectHasher<std::tuple<Types...>> : public std::true_type
 
     public:
         static void
-        Hash(Hasher & hasher, const std::tuple<Types...> & obj)
+        hash(Hasher & hasher, const std::tuple<Types...> & obj)
         {
             HashTupleElement<0>(hasher, obj);
         }
