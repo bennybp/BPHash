@@ -4,8 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-#ifndef BPHASH_GUARD_ALL_HPP_
-#define BPHASH_GUARD_ALL_HPP_
+#pragma once
 
 #include "bphash/types/array.hpp"
 #include "bphash/types/complex.hpp"
@@ -21,4 +20,3 @@
 #include "bphash/types/list.hpp"
 #include "bphash/types/forward_list.hpp"
 
-#endif

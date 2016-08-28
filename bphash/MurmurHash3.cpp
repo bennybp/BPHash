@@ -1,35 +1,13 @@
 /*! \file
- *
  * \brief MurmurHash3 hash implementation (source)
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
 #include "bphash/MurmurHash3.hpp"
-
-
-
-/////////////////////////////////////////////////////////////////
-// The hash algorithm implemented here is 128-bit MurmurHash3,
-// by Austin Appleby. It has been placed in the public domain
-// by the author.
-//
-// The code here is adapted from the smhasher project at
-// https://github.com/aappleby/smhasher. Mostly, it has
-// been converted to a progressive version
-//
-// No care has been taken to work with different endianness, etc,
-// since that is pretty much beyond the scope of the project.
-//
-// This is not a cryptographic hash, so if you are using it as
-// one, you are very, very wrong.
-/////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////
 // Some small functions for the hash algo
 //////////////////////////////////////////
-inline uint64_t rotl64 ( uint64_t x, int8_t r )
+static inline uint64_t rotl64 ( uint64_t x, int8_t r )
 {
   return (x << r) | (x >> (64 - r));
 }
@@ -72,9 +50,9 @@ void MurmurHash3::reset(void)
 }
 
 
-void MurmurHash3::update(void const * buffer, size_t size)
+void MurmurHash3::update(void const * buffer, size_t nbytes)
 {
-    if(size == 0)
+    if(nbytes == 0)
         return; // got nothing to do
 
     // cast to an array of bytes
@@ -82,7 +60,7 @@ void MurmurHash3::update(void const * buffer, size_t size)
 
     // total number of bytes to do is the amount passed, plus
     // any left over from last time
-    size_t ntodo = size + nbuffer_;
+    size_t ntodo = nbytes + nbuffer_;
 
 
     // If we still don't have a full buffer, just append to the
@@ -90,7 +68,7 @@ void MurmurHash3::update(void const * buffer, size_t size)
     if(ntodo < 16)
     {
         // buffer_.begin() + nbuffer_ represents where we left off last time
-        std::copy(data, data + size, buffer_.begin() + nbuffer_);
+        std::copy(data, data + nbytes, buffer_.begin() + nbuffer_);
         nbuffer_ = ntodo;
         return;
     }
@@ -121,8 +99,8 @@ void MurmurHash3::update(void const * buffer, size_t size)
         size_t tocopy = 16;
 
         // Is here some left in data that won't fill the buffer?
-        if((dataidx + 16) >= size)
-            tocopy = size - dataidx;
+        if((dataidx + 16) >= nbytes)
+            tocopy = nbytes - dataidx;
 
         // Actually copy the data to the internal buffer
         std::copy(data + dataidx, data + dataidx + tocopy, buffer_.begin());

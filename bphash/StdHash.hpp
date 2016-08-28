@@ -1,18 +1,14 @@
 /*! \file
- *
  * \brief A class that can be used for std::hash
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-#ifndef BPHASH_GUARD_STDHASH_HPP_
-#define BPHASH_GUARD_STDHASH_HPP_
+#pragma once
 
 #include "bphash/Hasher.hpp"
 
 namespace bphash {
 
-/*! \brief A class that can be used in place of std::hash in containers
- */
+/*! \brief A class that can be used in place of std::hash in containers */
 template<typename T>
 struct StdHash
 {
@@ -23,6 +19,4 @@ struct StdHash
     }
 };
 
-}
-
-#endif
+} // close namespace bphash

@@ -1,9 +1,6 @@
 /*! \file
- *
  * \brief A class that hashes objects (source)
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
-
 
 #include "bphash/Hasher.hpp"
 

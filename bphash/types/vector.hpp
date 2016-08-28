@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_VECTOR_HPP_
-#define BPHASH_GUARD_VECTOR_HPP_
+#pragma once
 
 #include "bphash/types/ContainerHelper.hpp"
 #include <vector>
@@ -22,4 +20,3 @@ struct ObjectHasher<std::vector<T, Alloc>> : public ContainerHasher<std::vector<
 } // close namespace detail
 } // close namespace bphash
 
-#endif

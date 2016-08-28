@@ -1,11 +1,8 @@
 /*! \file
- *
  * \brief MurmurHash3 hash implementation (header)
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-#ifndef BPHASH_GUARD_MURMURHASH3_HPP_
-#define BPHASH_GUARD_MURMURHASH3_HPP_
+#pragma once
 
 #include <cstdint>
 #include <array>
@@ -15,7 +12,21 @@
 namespace bphash {
 namespace detail {
 
-/*! \brief Implementation of MurmurHash3 */
+/*! \brief Implementation of MurmurHash3
+ * The hash algorithm implemented here is 128-bit MurmurHash3,
+ * by Austin Appleby. It has been placed in the public domain
+ * by the author.
+ *
+ * The code here is adapted from the smhasher project at
+ * https://github.com/aappleby/smhasher. Mostly, it has
+ * been converted to a progressive version.
+ *
+ * No care has been taken to work with different endianness, etc,
+ * since that is pretty much beyond the scope of the project.
+ *
+ * This is not a cryptographic hash, so if you are using it as
+ * one, you are very, very wrong.
+ */
 class MurmurHash3 : public HashImpl
 {
     private:
@@ -46,7 +57,11 @@ class MurmurHash3 : public HashImpl
         MurmurHash3(MurmurHash3 &&) = default;
         MurmurHash3 & operator=(MurmurHash3 &&) = default;
 
-        virtual void update(void const * buffer, size_t size);
+        /////////////////////////////////
+        // Virtual functions of HashImpl
+        /////////////////////////////////
+
+        virtual void update(void const * buffer, size_t nbytes);
 
         virtual HashValue finalize(void);
 
@@ -56,5 +71,3 @@ class MurmurHash3 : public HashImpl
 
 } // close namespace detail
 } // close namespace bphash
-
-#endif

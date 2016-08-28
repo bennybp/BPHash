@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_TUPLE_HPP_
-#define BPHASH_GUARD_TUPLE_HPP_
+#pragma once
 
 #include "bphash/Hasher.hpp"
 #include <tuple>
@@ -16,7 +14,7 @@ namespace detail {
 
 /*! \brief Hashing of std::tuple */
 template<typename... Types>
-struct ObjectHasher<std::tuple<Types...>> : public std::true_type
+struct ObjectHasher<std::tuple<Types...>> : public is_hashable<Types...>
 {
     private:
         template<size_t Idx>
@@ -47,4 +45,3 @@ struct ObjectHasher<std::tuple<Types...>> : public std::true_type
 } // close namespace detail
 } // close namespace bphash
 
-#endif

@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_LIST_HPP_
-#define BPHASH_GUARD_LIST_HPP_
+#pragma once
 
 #include "bphash/types/ContainerHelper.hpp"
 #include <list>
@@ -22,4 +20,3 @@ struct ObjectHasher<std::list<T, Alloc>> : public ContainerHasher<std::list<T, A
 } // close namespace detail
 } // close namespace bphash
 
-#endif

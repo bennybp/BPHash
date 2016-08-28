@@ -1,5 +1,7 @@
 # This is the main library
-add_executable(bphash_test test.cpp)
+add_executable(bphash_test test_integers.cpp
+                           test.cpp
+              )
 
 # Include the main source directory (my parent) as an include directory
 target_include_directories(bphash_test PRIVATE ${CMAKE_SOURCE_DIR})
@@ -15,12 +17,14 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
     #  1418  : external function definition with no prior declaration (generally ok)
     #  2259  : non-pointer conversion from "double" to "float" may lose significant bits
     #   280  : selector expression is constant (ok)
+    #  1419  : external declaration in primary source file
     list(APPEND BPHASH_TEST_CXX_FLAGS "-wd383")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-wd981")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-wd3291")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-wd1418")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-wd2259")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-wd280")
+    list(APPEND BPHASH_TEST_CXX_FLAGS "-wd1419")
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-std=c++11")
     list(APPEND BPHASH_TEST_CXX_FLAGS "-Wall;-Wextra;-pedantic")

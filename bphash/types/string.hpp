@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_STRING_HPP_
-#define BPHASH_GUARD_STRING_HPP_
+#pragma once
 
 //#include <string> // included via ContainerHelper
 #include "bphash/types/ContainerHelper.hpp"
@@ -22,4 +20,3 @@ struct ObjectHasher<std::basic_string<charT, Traits, Alloc>> : public ContainerH
 } // close namespace detail
 } // close namespace bphash
 
-#endif

@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_MEMORY_HPP_
-#define BPHASH_GUARD_MEMORY_HPP_
+#pragma once
 
 #include "bphash/Hasher.hpp"
 #include <memory>
@@ -15,13 +13,13 @@
 namespace bphash {
 
 /*! \brief Create a wrapper around a unique_ptr
- * 
+ *
  * \param [in] ptr The shared pointer to wrap
  * \param [in] len The number of elements that \p ptr points to
  * \return The wrapped pointer that is ready for hashing
  */
 template<typename T, typename Deleter>
-detail::PointerWrapper<T> HashPointer(const std::unique_ptr<T, Deleter> & ptr, size_t len = 1)
+detail::PointerWrapper<T> hash_pointer(const std::unique_ptr<T, Deleter> & ptr, size_t len = 1)
 {
     return detail::PointerWrapper<T> {typeid(std::unique_ptr<T, Deleter>).name(),
                                       ptr.get(), len
@@ -29,7 +27,7 @@ detail::PointerWrapper<T> HashPointer(const std::unique_ptr<T, Deleter> & ptr, s
 }
 
 /*! \brief Create a wrapper around a unique_ptr
- * 
+ *
  * \note Since this unique_ptr uses the array syntax, you must specify the length
  *
  * \param [in] ptr The shared pointer to wrap
@@ -37,7 +35,7 @@ detail::PointerWrapper<T> HashPointer(const std::unique_ptr<T, Deleter> & ptr, s
  * \return The wrapped pointer that is ready for hashing
  */
 template<typename T, typename Deleter>
-detail::PointerWrapper<T> HashPointer(const std::unique_ptr<T[], Deleter> & ptr, size_t len)
+detail::PointerWrapper<T> hash_pointer(const std::unique_ptr<T[], Deleter> & ptr, size_t len)
 {
     return detail::PointerWrapper<T> {typeid(std::unique_ptr<T[], Deleter>).name(),
                                       ptr.get(), len
@@ -51,7 +49,7 @@ detail::PointerWrapper<T> HashPointer(const std::unique_ptr<T[], Deleter> & ptr,
  * \return The wrapped pointer that is ready for hashing
  */
 template<typename T>
-detail::PointerWrapper<T> HashPointer(const std::shared_ptr<T> & ptr, size_t len = 1)
+detail::PointerWrapper<T> hash_pointer(const std::shared_ptr<T> & ptr, size_t len = 1)
 {
     return detail::PointerWrapper<T> {typeid(std::shared_ptr<T>).name(),
                                       ptr.get(), len
@@ -61,7 +59,7 @@ detail::PointerWrapper<T> HashPointer(const std::shared_ptr<T> & ptr, size_t len
 
 /*
 template<typename T>
-detail::PointerWrapper<T> HashPointer(const std::shared_ptr<T[]> & ptr, size_t len)
+detail::PointerWrapper<T> hash_pointer(const std::shared_ptr<T[]> & ptr, size_t len)
 {
     return detail::PointerWrapper<T>{typeid(std::shared_ptr<T[]>).name(),
                                      ptr.get(), len};
@@ -74,15 +72,25 @@ namespace detail {
 /*! \brief Hashing of std::unique_ptr
  *
  * It is assumed that the pointer points to a single element.
- * If not, you must wrap the pointer in a PointerWrapper manually (via HashPointer).
+ * If not, you must wrap the pointer in a PointerWrapper manually (via hash_pointer).
  */
 template<typename T, typename Deleter>
-struct ObjectHasher<std::unique_ptr<T, Deleter>> : public std::true_type
+struct ObjectHasher<std::unique_ptr<T, Deleter>> : public is_hashable<T>
 {
-    static void
-    hash(Hasher & hasher, const std::unique_ptr<T, Deleter> & obj)
+    template<typename U = T>
+    static
+    typename std::enable_if<is_hashable<U>::value, void>::type
+    hash(Hasher & hasher, const std::unique_ptr<U, Deleter> & obj)
     {
-        hasher(HashPointer(obj));
+        hasher(hash_pointer(obj));
+    }
+
+    template<typename U = T>
+    static
+    typename std::enable_if<!is_hashable<U>::value, void>::type
+    hash(Hasher & hasher, const std::unique_ptr<U, Deleter> & obj)
+    {
+        hasher(hash_pointer(obj));
     }
 };
 
@@ -90,15 +98,17 @@ struct ObjectHasher<std::unique_ptr<T, Deleter>> : public std::true_type
 /*! \brief Hashing of std::shared_ptr
  *
  * It is assumed that the pointer points to a single element.
- * If not, you must wrap the pointer in a PointerWrapper manually (via HashPointer).
+ * If not, you must wrap the pointer in a PointerWrapper manually (via hash_pointer).
  */
 template<typename T>
-struct ObjectHasher<std::shared_ptr<T>> : public std::true_type
+struct ObjectHasher<std::shared_ptr<T>> : public is_hashable<T>
 {
-    static void
-    hash(Hasher & hasher, const std::shared_ptr<T> & obj)
+    template<typename U = T>
+    static
+    typename std::enable_if<is_hashable<U>::value, void>::type
+    hash(Hasher & hasher, const std::shared_ptr<U> & obj)
     {
-        hasher(HashPointer(obj));
+        hasher(hash_pointer(obj));
     }
 };
 
@@ -106,4 +116,3 @@ struct ObjectHasher<std::shared_ptr<T>> : public std::true_type
 } // close namespace detail
 } // close namespace bphash
 
-#endif

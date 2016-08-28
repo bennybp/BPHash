@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_FORWARD_LIST_HPP_
-#define BPHASH_GUARD_FORWARD_LIST_HPP_
+#pragma once
 
 #include "bphash/types/ContainerHelper.hpp"
 #include <forward_list>
@@ -22,4 +20,3 @@ struct ObjectHasher<std::forward_list<T, Alloc>> : public ContainerHasher<std::f
 } // close namespace detail
 } // close namespace bphash
 
-#endif

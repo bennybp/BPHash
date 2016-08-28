@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_UNORDERED_SET_HPP_
-#define BPHASH_GUARD_UNORDERED_SET_HPP_
+#pragma once
 
 #include "bphash/types/ContainerHelper.hpp"
 #include <unordered_set>
@@ -16,10 +14,10 @@ namespace detail {
 
 /*! \brief Hashing of std::unordered_set */
 template<typename Key, typename HashT, typename Pred, typename Alloc>
-struct ObjectHasher<std::unordered_set<Key, HashT, Pred, Alloc>> : public ContainerHasher<std::unordered_set<Key, HashT, Pred, Alloc>> { };
+struct ObjectHasher<std::unordered_set<Key, HashT, Pred, Alloc>>
+         : public ContainerHasher<std::unordered_set<Key, HashT, Pred, Alloc>> { };
 
 
 } // close namespace detail
 } // close namespace bphash
 
-#endif

@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_COMPLEX_HPP_
-#define BPHASH_GUARD_COMPLEX_HPP_
+#pragma once
 
 #include "bphash/Hasher.hpp"
 #include <complex>
@@ -16,7 +14,7 @@ namespace detail {
 
 /*! \brief Hashing of std::complex */
 template<typename T>
-struct ObjectHasher<std::complex<T>> : public std::true_type
+struct ObjectHasher<std::complex<T>> : public is_hashable<T>
 {
     static void
     hash(Hasher & hasher, const std::complex<T> & obj)
@@ -29,4 +27,3 @@ struct ObjectHasher<std::complex<T>> : public std::true_type
 } // close namespace detail
 } // close namespace bphash
 
-#endif

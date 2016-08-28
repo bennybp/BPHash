@@ -4,9 +4,7 @@
  * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
-
-#ifndef BPHASH_GUARD_MAP_HPP_
-#define BPHASH_GUARD_MAP_HPP_
+#pragma once
 
 #include "bphash/types/ContainerHelper.hpp"
 #include "bphash/types/utility.hpp"
@@ -24,4 +22,3 @@ struct ObjectHasher<std::map<Key, T, Compare, Alloc>>
 } // close namespace detail
 } // close namespace bphash
 
-#endif

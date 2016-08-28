@@ -1,12 +1,10 @@
 /*! \file
- *
- * \brief A class holding a hash of data (header)
- * \author Benjamin Pritchard (ben@bennyp.org)
+ * \brief Hash value definition and utilities (source)
  */
 
 #include "bphash/Hash.hpp"
-#include <cstring>
 
+#include <cstring>
 
 namespace bphash {
 
@@ -26,10 +24,10 @@ std::string hash_to_string(const HashValue & hash)
     return hashstr;
 }
 
-
 HashValue truncate_hash(const HashValue & hash, size_t nbytes)
 {
-    /* Copy the hash, and then resize it.
+    /*
+       Copy the hash, and then resize it.
        This automatically handles cases where the new size is larger
        or smaller. The second parameter to resize() is zero so
        that if nbytes is larger than the stored hash size, newhash
