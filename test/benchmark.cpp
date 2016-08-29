@@ -1,0 +1,97 @@
+/*! \file
+ * \brief Testing of core hashing algorithms
+ */
+
+
+/* This file tests the core MurmurHash algorithms against
+ * the reference implementations in smhasher */
+
+#include <iostream>
+#include <random>
+#include <chrono>
+#include <cstdlib>
+
+#include "bphash/Hasher.hpp"
+#include "bphash/MurmurHash3_32.hpp"
+#include "bphash/MurmurHash3_64.hpp"
+#include "bphash/MurmurHash3_128.hpp"
+
+using namespace bphash;
+using namespace std::chrono;
+
+
+void random_fill(std::vector<uint8_t> & buffer)
+{
+    auto seed = system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::uniform_int_distribution<uint8_t> dist;
+
+    for(auto & it : buffer)
+        it = dist(generator);
+}
+
+
+int main(int argc, char ** argv)
+{
+    if(argc != 2)
+    {
+        std::cout << "\n  Missing number of bytes to test\n";
+        std::cout << "\n  usage: bphash_benchmark nbytes\n\n";
+        return 1;
+    }
+
+    size_t nbytes = static_cast<size_t>(atol(argv[1]));
+
+    std::vector<uint8_t> testdata(nbytes);
+    random_fill(testdata);
+
+    const void * testdata_ptr = testdata.data();
+    const size_t testdata_size = testdata.size();
+
+    std::cout << "\nTesting hashing of " << nbytes << " bytes\n";
+    std::cout << "Times in microseconds\n";
+
+    high_resolution_clock timer_clock;
+
+    // converts bytes/microsecond to GiB/second
+    const double conv_fac = 1.0e6/(1024.0 * 1024.0 * 1024.0);
+
+    {
+        auto time0 = timer_clock.now();
+        detail::MurmurHash3_32 mh32;
+        mh32.update(testdata_ptr, testdata_size);
+        HashValue bph_32 = mh32.finalize();
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "   32-bit hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    {
+        auto time0 = timer_clock.now();
+        detail::MurmurHash3_64 mh64;
+        mh64.update(testdata_ptr, testdata_size);
+        HashValue bph_64 = mh64.finalize();
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "   64-bit hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    {
+        auto time0 = timer_clock.now();
+        detail::MurmurHash3_128 mh128;
+        mh128.update(testdata_ptr, testdata_size);
+        HashValue bph_128 = mh128.finalize();
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "  128-bit hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    return 0;
+}
+

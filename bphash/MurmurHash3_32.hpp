@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3 hash implementation (header)
+ * \brief MurmurHash3_32 hash implementation (header)
  */
 
 #pragma once
@@ -12,8 +12,8 @@
 namespace bphash {
 namespace detail {
 
-/*! \brief Implementation of MurmurHash3
- * The hash algorithm implemented here is 128-bit MurmurHash3,
+/*! \brief Implementation of MurmurHash3 32-bit hash
+ * The hash algorithm implemented here is 32-bit MurmurHash3,
  * by Austin Appleby. It has been placed in the public domain
  * by the author.
  *
@@ -27,21 +27,21 @@ namespace detail {
  * This is not a cryptographic hash, so if you are using it as
  * one, you are very, very wrong.
  */
-class MurmurHash3 : public HashImpl
+class MurmurHash3_32 : public HashImpl
 {
     private:
-        static const uint64_t c1 = (0x87c37b91114253d5LLU);
-        static const uint64_t c2 = (0x4cf5ad432745937fLLU);
+        static const uint32_t c1 = 0xcc9e2d51;
+        static const uint32_t c2 = 0x1b873593;
 
-        uint64_t h1; //!< First part of the 128-bit hash
-        uint64_t h2; //!< Second part of the 128-bit hash
+        uint32_t h_;  //!< The 32-bit hash
 
-        std::array<uint8_t, 16> buffer_;   //!< Buffer for updating blocks, and any left over
+        std::array<uint8_t, 4> buffer_;   //!< Buffer for updating blocks, and any left over
 
-        unsigned short nbuffer_;           //!< Number of elements in the buffer
-        size_t len_;                       //!< Total amount already hashed
+        int nbuffer_;    //!< Number of elements in the buffer
+        size_t len_;     //!< Total amount already hashed
 
-        /*! \brief Hash 16 bytes of data in buffer_
+
+        /*! \brief Hash 4 bytes of data in buffer_
          *
          * This does NOT handle any tail/remainder, so buffer_
          * must be full
@@ -49,13 +49,13 @@ class MurmurHash3 : public HashImpl
         void update_block_(void);
 
     public:
-        MurmurHash3(void);
-        ~MurmurHash3(void) = default;
+        MurmurHash3_32(void);
+        ~MurmurHash3_32(void) = default;
 
-        MurmurHash3(const MurmurHash3 &) = default;
-        MurmurHash3 & operator=(const MurmurHash3 &) = default;
-        MurmurHash3(MurmurHash3 &&) = default;
-        MurmurHash3 & operator=(MurmurHash3 &&) = default;
+        MurmurHash3_32(const MurmurHash3_32 &) = default;
+        MurmurHash3_32 & operator=(const MurmurHash3_32 &) = default;
+        MurmurHash3_32(MurmurHash3_32 &&) = default;
+        MurmurHash3_32 & operator=(MurmurHash3_32 &&) = default;
 
         /////////////////////////////////
         // Virtual functions of HashImpl

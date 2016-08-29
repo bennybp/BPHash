@@ -80,6 +80,7 @@ class detect_hash_member
 /*! \brief Type of hash to use */
 enum class HashType
 {
+    Hash32,
     Hash64,
     Hash128
 };

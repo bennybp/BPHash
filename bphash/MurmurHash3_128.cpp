@@ -1,8 +1,8 @@
 /*! \file
- * \brief MurmurHash3 hash implementation (source)
+ * \brief MurmurHash3_128 hash implementation (source)
  */
 
-#include "bphash/MurmurHash3.hpp"
+#include "bphash/MurmurHash3_128.hpp"
 
 //////////////////////////////////////////
 // Some small functions for the hash algo
@@ -35,22 +35,22 @@ namespace detail {
 // Public functions
 ////////////////////////////////
 
-MurmurHash3::MurmurHash3(void)
+MurmurHash3_128::MurmurHash3_128(void)
 {
     reset();
 }
 
 
-void MurmurHash3::reset(void)
+void MurmurHash3_128::reset(void)
 {
-    h1 = h2 = 0;
+    h1_ = h2_ = 0;
     len_ = 0;
     std::fill(buffer_.begin(), buffer_.end(), 0);
     nbuffer_ = 0;
 }
 
 
-void MurmurHash3::update(void const * buffer, size_t nbytes)
+void MurmurHash3_128::update(void const * buffer, size_t nbytes)
 {
     if(nbytes == 0)
         return; // got nothing to do
@@ -60,7 +60,7 @@ void MurmurHash3::update(void const * buffer, size_t nbytes)
 
     // total number of bytes to do is the amount passed, plus
     // any left over from last time
-    size_t ntodo = nbytes + nbuffer_;
+    size_t ntodo = nbytes + static_cast<size_t>(nbuffer_);
 
 
     // If we still don't have a full buffer, just append to the
@@ -69,7 +69,7 @@ void MurmurHash3::update(void const * buffer, size_t nbytes)
     {
         // buffer_.begin() + nbuffer_ represents where we left off last time
         std::copy(data, data + nbytes, buffer_.begin() + nbuffer_);
-        nbuffer_ = ntodo;
+        nbuffer_ = static_cast<int>(ntodo);
         return;
     }
 
@@ -80,7 +80,7 @@ void MurmurHash3::update(void const * buffer, size_t nbytes)
     // dataidx = next place to read from data
     // (which is also where to stop for this initial copy)
     // buffer_.begin() + nbuffer_ represents where we left off last time
-    size_t dataidx = 16-nbuffer_;
+    size_t dataidx = 16 - static_cast<size_t>(nbuffer_);
     std::copy(data, data + dataidx, buffer_.begin() + nbuffer_);
 
 
@@ -110,7 +110,7 @@ void MurmurHash3::update(void const * buffer, size_t nbytes)
         dataidx += tocopy;
 
         // How much is in the buffer
-        nbuffer_ = ntodo;
+        nbuffer_ = static_cast<int>(ntodo);
 
     } while(ntodo >= 16);
 
@@ -118,93 +118,103 @@ void MurmurHash3::update(void const * buffer, size_t nbytes)
 }
 
 
-HashValue MurmurHash3::finalize(void)
+HashValue MurmurHash3_128::finalize(void)
 {
     // If we have any left over, we have to do that
     if(nbuffer_ > 0)
     {
-        const uint8_t * tail = (const uint8_t*)(buffer_.data());
+        const uint8_t * tail = static_cast<const uint8_t*>(buffer_.data());
 
         uint64_t k1 = 0;
         uint64_t k2 = 0;
 
         switch(nbuffer_ & 15)
         {
-            case 15: k2 ^= ((uint64_t)tail[14]) << 48;
-            case 14: k2 ^= ((uint64_t)tail[13]) << 40;
-            case 13: k2 ^= ((uint64_t)tail[12]) << 32;
-            case 12: k2 ^= ((uint64_t)tail[11]) << 24;
-            case 11: k2 ^= ((uint64_t)tail[10]) << 16;
-            case 10: k2 ^= ((uint64_t)tail[ 9]) << 8;
-            case  9: k2 ^= ((uint64_t)tail[ 8]) << 0;
-                     k2 *= c2; k2  = rotl64(k2,33); k2 *= c1; h2 ^= k2;
+            case 15: k2 ^= (static_cast<uint64_t>(tail[14])) << 48;
+            case 14: k2 ^= (static_cast<uint64_t>(tail[13])) << 40;
+            case 13: k2 ^= (static_cast<uint64_t>(tail[12])) << 32;
+            case 12: k2 ^= (static_cast<uint64_t>(tail[11])) << 24;
+            case 11: k2 ^= (static_cast<uint64_t>(tail[10])) << 16;
+            case 10: k2 ^= (static_cast<uint64_t>(tail[ 9])) << 8;
+            case  9: k2 ^= (static_cast<uint64_t>(tail[ 8])) << 0;
+                     k2 *= c2; k2  = rotl64(k2,33); k2 *= c1; h2_ ^= k2;
 
-            case  8: k1 ^= ((uint64_t)tail[ 7]) << 56;
-            case  7: k1 ^= ((uint64_t)tail[ 6]) << 48;
-            case  6: k1 ^= ((uint64_t)tail[ 5]) << 40;
-            case  5: k1 ^= ((uint64_t)tail[ 4]) << 32;
-            case  4: k1 ^= ((uint64_t)tail[ 3]) << 24;
-            case  3: k1 ^= ((uint64_t)tail[ 2]) << 16;
-            case  2: k1 ^= ((uint64_t)tail[ 1]) << 8;
-            case  1: k1 ^= ((uint64_t)tail[ 0]) << 0;
-                     k1 *= c1; k1  = rotl64(k1,31); k1 *= c2; h1 ^= k1;
+            case  8: k1 ^= (static_cast<uint64_t>(tail[ 7])) << 56;
+            case  7: k1 ^= (static_cast<uint64_t>(tail[ 6])) << 48;
+            case  6: k1 ^= (static_cast<uint64_t>(tail[ 5])) << 40;
+            case  5: k1 ^= (static_cast<uint64_t>(tail[ 4])) << 32;
+            case  4: k1 ^= (static_cast<uint64_t>(tail[ 3])) << 24;
+            case  3: k1 ^= (static_cast<uint64_t>(tail[ 2])) << 16;
+            case  2: k1 ^= (static_cast<uint64_t>(tail[ 1])) << 8;
+            case  1: k1 ^= (static_cast<uint64_t>(tail[ 0])) << 0;
+                     k1 *= c1; k1  = rotl64(k1,31); k1 *= c2; h1_ ^= k1;
         };
     }
 
     // How much we've done altogether
-    len_ += nbuffer_;
+    len_ += static_cast<size_t>(nbuffer_);
 
     // Last steps of the hash
-    h1 ^= len_; h2 ^= len_;
+    h1_ ^= len_; h2_ ^= len_;
 
-    h1 += h2;
-    h2 += h1;
+    h1_ += h2_;
+    h2_ += h1_;
 
-    h1 = fmix64(h1);
-    h2 = fmix64(h2);
+    h1_ = fmix64(h1_);
+    h2_ = fmix64(h2_);
 
-    h1 += h2;
-    h2 += h1;
+    h1_ += h2_;
+    h2_ += h1_;
 
     // Create the hash object and return
-    return HashValue{ static_cast<uint8_t>(h1),
-                      static_cast<uint8_t>(h1 >> 8),
-                      static_cast<uint8_t>(h1 >> 16),
-                      static_cast<uint8_t>(h1 >> 24),
-                      static_cast<uint8_t>(h1 >> 32),
-                      static_cast<uint8_t>(h1 >> 40),
-                      static_cast<uint8_t>(h1 >> 48),
-                      static_cast<uint8_t>(h1 >> 56),
-                      static_cast<uint8_t>(h2),
-                      static_cast<uint8_t>(h2 >> 8),
-                      static_cast<uint8_t>(h2 >> 16),
-                      static_cast<uint8_t>(h2 >> 24),
-                      static_cast<uint8_t>(h2 >> 32),
-                      static_cast<uint8_t>(h2 >> 40),
-                      static_cast<uint8_t>(h2 >> 48),
-                      static_cast<uint8_t>(h2 >> 56) };
+    return HashValue{ static_cast<uint8_t>(h1_),
+                      static_cast<uint8_t>(h1_ >> 8),
+                      static_cast<uint8_t>(h1_ >> 16),
+                      static_cast<uint8_t>(h1_ >> 24),
+                      static_cast<uint8_t>(h1_ >> 32),
+                      static_cast<uint8_t>(h1_ >> 40),
+                      static_cast<uint8_t>(h1_ >> 48),
+                      static_cast<uint8_t>(h1_ >> 56),
+                      static_cast<uint8_t>(h2_),
+                      static_cast<uint8_t>(h2_ >> 8),
+                      static_cast<uint8_t>(h2_ >> 16),
+                      static_cast<uint8_t>(h2_ >> 24),
+                      static_cast<uint8_t>(h2_ >> 32),
+                      static_cast<uint8_t>(h2_ >> 40),
+                      static_cast<uint8_t>(h2_ >> 48),
+                      static_cast<uint8_t>(h2_ >> 56) };
 }
 
 
 ////////////////////////////////
 // Private member functions
 ////////////////////////////////
-void MurmurHash3::update_block_(void)
+void MurmurHash3_128::update_block_(void)
 {
     // This function only does an entire 16-byte buffer
     // (that is stored as private member buffer_)
-    const uint64_t * block64 = (const uint64_t *)(buffer_.data());
+    const uint64_t * block64 = reinterpret_cast<const uint64_t *>(buffer_.data());
 
     uint64_t k1 = block64[0];
     uint64_t k2 = block64[1];
 
-    k1 *= c1; k1  = rotl64(k1,31); k1 *= c2; h1 ^= k1;
+    k1 *= c1;
+    k1  = rotl64(k1, 31);
+    k1 *= c2;
 
-    h1 = rotl64(h1,27); h1 += h2; h1 = h1*5+0x52dce729;
+    h1_ ^= k1;
+    h1_ = rotl64(h1_, 27);
+    h1_ += h2_;
+    h1_ = h1_*5+0x52dce729;
 
-    k2 *= c2; k2  = rotl64(k2,33); k2 *= c1; h2 ^= k2;
+    k2 *= c2;
+    k2  = rotl64(k2, 33);
+    k2 *= c1;
+    h2_ ^= k2;
 
-    h2 = rotl64(h2,31); h2 += h1; h2 = h2*5+0x38495ab5;
+    h2_ = rotl64(h2_, 31);
+    h2_ += h1_;
+    h2_ = h2_*5+0x38495ab5;
 
     // update how much we've actually hashed
     len_ += 16;

@@ -46,6 +46,9 @@ class HashImpl
          * before or after finalize.
          */
         virtual void reset(void) = 0;
+
+
+        virtual ~HashImpl() = default;
 };
 
 
