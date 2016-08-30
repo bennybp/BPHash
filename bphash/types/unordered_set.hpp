@@ -10,14 +10,14 @@
 #include <unordered_set>
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::unordered_set */
 template<typename Key, typename HashT, typename Pred, typename Alloc>
-struct ObjectHasher<std::unordered_set<Key, HashT, Pred, Alloc>>
-         : public ContainerHasher<std::unordered_set<Key, HashT, Pred, Alloc>> { };
+void hash_object( const std::unordered_set<Key, HashT, Pred, Alloc> & s, Hasher & h)
+{
+    detail::hash_container_object(s, h);
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

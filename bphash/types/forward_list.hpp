@@ -10,13 +10,14 @@
 #include <forward_list>
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::forward_list */
 template<typename T, typename Alloc>
-struct ObjectHasher<std::forward_list<T, Alloc>> : public ContainerHasher<std::forward_list<T, Alloc>> { };
+void hash_object( const std::forward_list<T, Alloc> & a, Hasher & h)
+{
+    detail::hash_container_object(a, h);
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

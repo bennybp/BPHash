@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3_128 hash implementation (header)
+ * \brief MurmurHash3_128_x64 hash implementation (header)
  */
 
 #pragma once
@@ -27,7 +27,7 @@ namespace detail {
  * This is not a cryptographic hash, so if you are using it as
  * one, you are very, very wrong.
  */
-class MurmurHash3_128 : public HashImpl
+class MurmurHash3_128_x64 : public HashImpl
 {
     private:
         static const uint64_t c1 = (0x87c37b91114253d5LLU);
@@ -49,13 +49,13 @@ class MurmurHash3_128 : public HashImpl
         void update_block_(void);
 
     public:
-        MurmurHash3_128(void);
-        ~MurmurHash3_128(void) = default;
+        MurmurHash3_128_x64(void);
+        ~MurmurHash3_128_x64(void) = default;
 
-        MurmurHash3_128(const MurmurHash3_128 &) = default;
-        MurmurHash3_128 & operator=(const MurmurHash3_128 &) = default;
-        MurmurHash3_128(MurmurHash3_128 &&) = default;
-        MurmurHash3_128 & operator=(MurmurHash3_128 &&) = default;
+        MurmurHash3_128_x64(const MurmurHash3_128_x64 &) = default;
+        MurmurHash3_128_x64 & operator=(const MurmurHash3_128_x64 &) = default;
+        MurmurHash3_128_x64(MurmurHash3_128_x64 &&) = default;
+        MurmurHash3_128_x64 & operator=(MurmurHash3_128_x64 &&) = default;
 
         /////////////////////////////////
         // Virtual functions of HashImpl

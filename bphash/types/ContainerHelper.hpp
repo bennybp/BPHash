@@ -13,21 +13,16 @@ namespace detail {
 
 /*! \brief Helper for hashing STL containers */
 template<typename Cont>
-struct ContainerHasher : public is_hashable<typename Cont::value_type>
+typename std::enable_if<is_hashable<typename Cont::value_type>::value, void>::type
+hash_container_object(const Cont & cont, Hasher & hasher)
 {
-    template<typename U = Cont>
-    static
-    typename std::enable_if<is_hashable<typename U::value_type>::value, void>::type
-    hash(Hasher & hasher, const Cont & cont)
-    {
-        // some containers don't have size() (ie, forward_list)
-        size_t d = static_cast<size_t>(std::distance(cont.begin(), cont.end()));
-        hasher(d);
+    // some containers don't have size() (ie, forward_list)
+    size_t d = static_cast<size_t>(std::distance(cont.begin(), cont.end()));
+    hasher(d);
 
-        for(const auto & it : cont)
-            hasher(it);
-    }
-};
+    for(const auto & it : cont)
+        hasher(it);
+}
 
 
 } // close namespace detail

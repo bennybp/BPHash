@@ -6,17 +6,18 @@
 
 #pragma once
 
-#include "bphash/types/ContainerHelper.hpp"
+#include "bphash/Hasher.hpp"
 #include <array>
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::array */
 template<typename T, size_t N>
-struct ObjectHasher<std::array<T, N>> : public ContainerHasher<std::array<T, N>> { };
+void hash_object( const std::array<T, N> & a, Hasher & h)
+{
+    h(hash_pointer(a.data(), N));
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

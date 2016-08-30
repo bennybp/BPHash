@@ -1,8 +1,8 @@
 /*! \file
- * \brief MurmurHash3_128 hash implementation (source)
+ * \brief MurmurHash3_128_x64 hash implementation (source)
  */
 
-#include "bphash/MurmurHash3_128.hpp"
+#include "bphash/MurmurHash3_128_x64.hpp"
 
 //////////////////////////////////////////
 // Some small functions for the hash algo
@@ -35,13 +35,13 @@ namespace detail {
 // Public functions
 ////////////////////////////////
 
-MurmurHash3_128::MurmurHash3_128(void)
+MurmurHash3_128_x64::MurmurHash3_128_x64(void)
 {
     reset();
 }
 
 
-void MurmurHash3_128::reset(void)
+void MurmurHash3_128_x64::reset(void)
 {
     h1_ = h2_ = 0;
     len_ = 0;
@@ -50,7 +50,7 @@ void MurmurHash3_128::reset(void)
 }
 
 
-void MurmurHash3_128::update(void const * buffer, size_t nbytes)
+void MurmurHash3_128_x64::update(void const * buffer, size_t nbytes)
 {
     if(nbytes == 0)
         return; // got nothing to do
@@ -118,7 +118,7 @@ void MurmurHash3_128::update(void const * buffer, size_t nbytes)
 }
 
 
-HashValue MurmurHash3_128::finalize(void)
+HashValue MurmurHash3_128_x64::finalize(void)
 {
     // If we have any left over, we have to do that
     if(nbuffer_ > 0)
@@ -189,7 +189,7 @@ HashValue MurmurHash3_128::finalize(void)
 ////////////////////////////////
 // Private member functions
 ////////////////////////////////
-void MurmurHash3_128::update_block_(void)
+void MurmurHash3_128_x64::update_block_(void)
 {
     // This function only does an entire 16-byte buffer
     // (that is stored as private member buffer_)

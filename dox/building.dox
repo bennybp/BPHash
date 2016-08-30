@@ -1,0 +1,18 @@
+/*! \page building_page Building and Testing
+
+\section building_overview Overview
+
+The BPHash project is build using CMake (https://cmake.org).
+
+\section building_dependencies Dependencies
+
+The only dependency is a C++ compiler (and standard libraries)
+capable of compiling C++11 (in particular, variadic templates).
+
+\section building_instructions Building
+
+\section building_testing Testing
+
+\section building_installing Installation
+
+*/

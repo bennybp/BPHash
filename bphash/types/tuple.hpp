@@ -12,36 +12,32 @@
 namespace bphash {
 namespace detail {
 
-/*! \brief Hashing of std::tuple */
-template<typename... Types>
-struct ObjectHasher<std::tuple<Types...>> : public is_hashable<Types...>
+
+template<size_t Idx, typename... Types>
+typename std::enable_if<Idx == sizeof...(Types), void>::type
+tuple_element_hasher(Hasher &, const std::tuple<Types...> &)
+{ }
+
+template<size_t Idx, typename... Types>
+typename std::enable_if<Idx < sizeof...(Types), void>::type
+tuple_element_hasher(Hasher & h, const std::tuple<Types...> & tup)
 {
-    private:
-        template<size_t Idx>
-        static
-        typename std::enable_if<Idx == sizeof...(Types), void>::type
-        HashTupleElement(Hasher &, const std::tuple<Types...> &)
-        { }
-
-
-        template<size_t Idx>
-        static
-        typename std::enable_if<Idx < sizeof...(Types), void>::type
-        HashTupleElement(Hasher & hasher, const std::tuple<Types...> & obj)
-        {
-            hasher(std::get<Idx>(obj));
-            HashTupleElement<Idx+1>(hasher, obj);
-        }
-
-    public:
-        static void
-        hash(Hasher & hasher, const std::tuple<Types...> & obj)
-        {
-            HashTupleElement<0>(hasher, obj);
-        }
-};
+    h(std::get<Idx>(tup));
+    tuple_element_hasher<Idx+1>(h, tup);
+}
 
 
 } // close namespace detail
+
+
+
+template<typename... Types>
+typename std::enable_if<is_hashable<Types...>::value, void>::type
+hash_object( const std::tuple<Types...> & tup, Hasher & h)
+{
+    detail::tuple_element_hasher<0>(h, tup);
+}
+
+
 } // close namespace bphash
 

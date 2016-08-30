@@ -21,25 +21,11 @@ class Hasher;
 namespace detail {
 
 
-/*! \brief Hashing of a particular type of object
- *
- * Object hashers tell how to hash a single type of object (for example, an
- * STL vector).
- *
- * The base structure is empty and derives from std::false_type to signify that,
- * in general, objects can't be hashed. If it is possible to hash a type, the
- * ObjectHasher should be specialized and derived from std::true_type.
- *
- * \tparam T Type of object that can be hashed by this structure
- */
-template<typename T> struct ObjectHasher : public std::false_type { };
-
-
 /*! \brief Wrapper for pointers and arrays
  *
  * This wraps any kind of pointer, including arrays, and stores
  * its type information and length. These values are then hashed
- * by an appropriate ObjectHasher.
+ * by an appropriate free function or member function
  */
 template<typename T>
 struct PointerWrapper
@@ -51,7 +37,7 @@ struct PointerWrapper
 
 
 
-/*! \brief Detectes if a class has a hash() member function with the
+/*! \brief Detects if a class has a hash() member function with the
  *         appropriate signature
  */
 template <typename T>
@@ -71,6 +57,25 @@ class detect_hash_member
 };
 
 
+/*! \brief Detects there is a free function that will hash an object
+ */
+template <typename T>
+class detect_hash_free_function
+{
+    private:
+        using Yes = std::true_type;
+        using No = std::false_type;
+
+        template<typename C> static auto test(void*)
+                -> decltype( hash_object( std::declval<const C &>(), std::declval<Hasher &>() ), Yes{});
+
+  template<typename> static No & test(...);
+
+  public:
+      static bool const value = std::is_same<decltype(test<T>(0)), Yes>::value;
+};
+
+
 } // close namespace detail
 
 
@@ -80,9 +85,17 @@ class detect_hash_member
 /*! \brief Type of hash to use */
 enum class HashType
 {
-    Hash32,
-    Hash64,
-    Hash128
+    Hash32,     //!< Default 32-bit hash
+    Hash64,     //!< Default 64-bit hash
+    Hash128,    //!< Default 128-bit hash
+
+    Hash32_x32,   //!< Default 32-bit hash for x32
+    Hash64_x32,   //!< Default 64-bit hash for x32
+    Hash128_x32,  //!< Default 128-bit hash for x32
+
+    Hash32_x64,   //!< Default 32-bit hash for x86-64
+    Hash64_x64,   //!< Default 64-bit hash for x86-64
+    Hash128_x64,  //!< Default 128-bit hash for x86-64
 };
 
 
@@ -103,7 +116,7 @@ struct is_hashable<T>
     using my_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
     static constexpr bool value = detail::detect_hash_member<my_type>::value ||
-                                  detail::ObjectHasher<my_type>::value ||
+                                  detail::detect_hash_free_function<my_type>::value ||
                                   std::is_enum<my_type>::value;
 };
 
@@ -155,12 +168,15 @@ class Hasher
         template<typename T, typename... Targs>
         void operator()(const T & obj, const Targs &... objs)
         {
-            static_assert(is_hashable<T>::value, "Object is not hashable");
+            static_assert(is_hashable<T>::value,
+                          "\n\n"
+                          "  ***  Object is not hashable. Did you remember to include the correct header       ***\n"
+                          "  ***  (such as <bphash/types/string.hpp>) or to declare a hash member function or  ***\n"
+                          "  ***  free function?                                                               ***\n");
 
             // hash the type of the object
             const char * typestr = typeid(T).name();
             size_t len = strlen(typestr);
-            add_data(static_cast<void const *>(&len), sizeof(len));
             add_data(static_cast<void const *>(typestr), len);
 
             // Now hash the object itself
@@ -206,26 +222,26 @@ class Hasher
 
         /*! \brief Hash a single object
          *
-         * Enabled only if we have an ObjectHasher structure with the
-         * appropriate type
-         */
-        template<typename T>
-        typename std::enable_if<detail::ObjectHasher<T>::value, void>::type
-        hash_single_(const T & obj)
-        {
-            detail::ObjectHasher<T>::hash(*this, obj);
-        }
-
-
-        /*! \brief Hash a single object
-         *
-         * Enabled if the object has a void hash(Hasher &) const member function
+         * Enabled if the object has a `void hash(Hasher &) const` member function
          */
         template<typename T>
         auto hash_single_(const T & obj)
         -> decltype(static_cast<void (T::*)(Hasher &) const>(&T::hash), void())
         {
             obj.hash(*this);
+        }
+
+
+        /*! \brief Hash a single object
+         *
+         * Enabled if there is a free function with a signature
+         * `void hash_object(const T &, Hasher &)`
+         */
+        template<typename T>
+        auto hash_single_(const T & obj)
+        -> decltype( hash_object( std::declval<const T &>(), std::declval<Hasher &>() ), void())
+        {
+            hash_object(obj, *this);
         }
 
 
@@ -295,61 +311,46 @@ detail::PointerWrapper<T> hash_pointer(const T * ptr, size_t len = 1)
 }
 
 
-
-namespace detail {
-
 /*! \brief Hashing of a PointerWrapper */
 template<typename T>
-struct ObjectHasher<PointerWrapper<T>> : public std::true_type
+void hash_object(const detail::PointerWrapper<T> & pw, Hasher & h)
 {
-    static void
-    hash(Hasher & hasher, const PointerWrapper<T> & obj)
+    if(pw.ptr != nullptr)
     {
-        if(obj.ptr != nullptr)
-        {
-            hasher(obj.len);
-
-            for(size_t i = 0; i < obj.len; i++)
-                hasher(obj.ptr[i]);
-        }
-        else
-            hasher(0);
+        h.add_data(&pw.len, sizeof(pw.len));
+        h.add_data(pw.ptr, pw.len);
     }
-};
+    else
+    {
+        size_t n = 0;
+        h.add_data(&n, sizeof(size_t));
+    }
+}
 
 
 /*! \brief Hashing of a raw pointer
  *
  * It is assumed that the pointer points to a single element.
- * If there is more than one element, you must wrap the pointer in
- * a PointerWrapper manually (via hash_pointer).
+ * If there is more than one element, you must wrap the pointer
+ * with hash_pointer.
  */
 template<typename T>
-struct ObjectHasher<T *> : public std::true_type
+void hash_object(const T * p, Hasher & h)
 {
-    static void
-    hash(Hasher & hasher, const T * obj)
-    {
-        hasher(hash_pointer(obj, 1));
-    }
-};
+    h(hash_pointer(p, 1));
+}
 
 
 /*! \brief Hashing of a C-style string
  *
  * It is assumed that the pointer points to a null-terminated
- * array of characters. If not, you must wrap the pointer in
- * a PointerWrapper manually (via hash_pointer).
+ * array of characters. If not, you must wrap the pointer
+ * with hash_pointer.
  */
-template<>
-struct ObjectHasher<const char *> : public std::true_type
+inline void hash_object(const char * p, Hasher & h)
 {
-    static void
-    hash(Hasher & hasher, const char * obj)
-    {
-        hasher(hash_pointer(obj, strlen(obj)));
-    }
-};
+    h(hash_pointer(p, strlen(p)));
+}
 
 
 
@@ -357,14 +358,11 @@ struct ObjectHasher<const char *> : public std::true_type
 // Hashing of arithmetic types
 //////////////////////////////////////////
 #define DECLARE_FUNDAMENTAL_HASHER(type) \
-    template<> struct ObjectHasher<type> : public std::true_type \
+    inline void hash_object(const type & a, Hasher & h) \
     {\
-        static void hash(Hasher & hasher, const type & obj) \
-        {\
-            hasher.add_data(static_cast<void const *>(&obj), \
-                            static_cast<size_t>(sizeof(type))); \
-        }\
-    };
+        h.add_data(static_cast<void const *>(&a), \
+                   static_cast<size_t>(sizeof(type))); \
+    }\
 
 DECLARE_FUNDAMENTAL_HASHER(bool)
 DECLARE_FUNDAMENTAL_HASHER(char)
@@ -384,9 +382,6 @@ DECLARE_FUNDAMENTAL_HASHER(double)
 DECLARE_FUNDAMENTAL_HASHER(long double)
 
 #undef DECLARE_FUNDAMENTAL_HASHER
-
-} // close namespace detail
-
 
 
 } // close namespace bphash

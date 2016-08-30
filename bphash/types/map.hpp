@@ -11,14 +11,14 @@
 #include <map>
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::map */
 template<typename Key, typename T, typename Compare, typename Alloc>
-struct ObjectHasher<std::map<Key, T, Compare, Alloc>>
-            : public ContainerHasher<std::map<Key, T, Compare, Alloc>> { };
+void hash_object( const std::map<Key, T, Compare, Alloc> & m, Hasher & h)
+{
+    detail::hash_container_object(m, h);
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

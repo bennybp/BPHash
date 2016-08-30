@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3_32 hash implementation (header)
+ * \brief MurmurHash3_32_x32 hash implementation (header)
  */
 
 #pragma once
@@ -27,7 +27,7 @@ namespace detail {
  * This is not a cryptographic hash, so if you are using it as
  * one, you are very, very wrong.
  */
-class MurmurHash3_32 : public HashImpl
+class MurmurHash3_32_x32 : public HashImpl
 {
     private:
         static const uint32_t c1 = 0xcc9e2d51;
@@ -49,13 +49,13 @@ class MurmurHash3_32 : public HashImpl
         void update_block_(void);
 
     public:
-        MurmurHash3_32(void);
-        ~MurmurHash3_32(void) = default;
+        MurmurHash3_32_x32(void);
+        ~MurmurHash3_32_x32(void) = default;
 
-        MurmurHash3_32(const MurmurHash3_32 &) = default;
-        MurmurHash3_32 & operator=(const MurmurHash3_32 &) = default;
-        MurmurHash3_32(MurmurHash3_32 &&) = default;
-        MurmurHash3_32 & operator=(MurmurHash3_32 &&) = default;
+        MurmurHash3_32_x32(const MurmurHash3_32_x32 &) = default;
+        MurmurHash3_32_x32 & operator=(const MurmurHash3_32_x32 &) = default;
+        MurmurHash3_32_x32(MurmurHash3_32_x32 &&) = default;
+        MurmurHash3_32_x32 & operator=(MurmurHash3_32_x32 &&) = default;
 
         /////////////////////////////////
         // Virtual functions of HashImpl

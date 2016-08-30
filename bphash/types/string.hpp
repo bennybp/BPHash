@@ -10,13 +10,14 @@
 #include "bphash/types/ContainerHelper.hpp"
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::string */
 template<typename charT, typename Traits, typename Alloc>
-struct ObjectHasher<std::basic_string<charT, Traits, Alloc>> : public ContainerHasher<std::basic_string<charT, Traits, Alloc>> { };
+void hash_object( const std::basic_string<charT, Traits, Alloc> & s, Hasher & h)
+{
+    detail::hash_container_object(s, h);
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

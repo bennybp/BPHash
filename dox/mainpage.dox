@@ -1,0 +1,23 @@
+/*! \mainpage
+
+\section main_desc_sec Description
+
+BPHash is a hashing library for C++. It is designed to hash
+complex C++ data types, such as containers, pointers, and smart
+pointers.
+
+\section main_feat_sec Description
+
+\section main_building_sec Building & Testing
+
+See \ref building_page
+
+\section main_using_sec Using
+
+See \ref using_page
+
+\section main_license_sec License
+
+TODO
+
+*/

@@ -1,4 +1,4 @@
-# This is the main library
+# Testing of BPHashThis is the main library
 
 # Set the compile options
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
@@ -29,22 +29,27 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 endif()
 
 
-#add_executable(bphash_test test_integers.cpp
-#                           test.cpp
-#              )
-#
-#target_include_directories(bphash_test PRIVATE ${CMAKE_SOURCE_DIR})
-#target_compile_options(bphash_test PRIVATE ${BPHASH_TEST_CXX_FLAGS})
-#target_link_libraries(bphash_test PRIVATE bphash)
+add_executable(bphash_test test_integers.cpp
+                           test.cpp
+              )
+
+target_include_directories(bphash_test PRIVATE ${CMAKE_SOURCE_DIR})
+target_compile_options(bphash_test PRIVATE ${BPHASH_TEST_CXX_FLAGS} ${BPHASH_EXTRA_CXX_FLAGS})
+target_link_libraries(bphash_test PRIVATE bphash)
 
 
 
 add_executable(bphash_reftest reftest.cpp MurmurHash3_reference.cpp)
 target_include_directories(bphash_reftest PRIVATE ${CMAKE_SOURCE_DIR})
-target_compile_options(bphash_reftest PRIVATE ${BPHASH_TEST_CXX_FLAGS})
+target_compile_options(bphash_reftest PRIVATE ${BPHASH_TEST_CXX_FLAGS} ${BPHASH_EXTRA_CXX_FLAGS})
 target_link_libraries(bphash_reftest PRIVATE bphash)
 
 add_executable(bphash_benchmark benchmark.cpp MurmurHash3_reference.cpp)
 target_include_directories(bphash_benchmark PRIVATE ${CMAKE_SOURCE_DIR})
-target_compile_options(bphash_benchmark PRIVATE ${BPHASH_TEST_CXX_FLAGS})
+target_compile_options(bphash_benchmark PRIVATE ${BPHASH_TEST_CXX_FLAGS} ${BPHASH_EXTRA_CXX_FLAGS})
 target_link_libraries(bphash_benchmark PRIVATE bphash)
+
+add_executable(bphash_detect test_detect.cpp)
+target_include_directories(bphash_detect PRIVATE ${CMAKE_SOURCE_DIR})
+target_compile_options(bphash_detect PRIVATE ${BPHASH_TEST_CXX_FLAGS} ${BPHASH_EXTRA_CXX_FLAGS})
+target_link_libraries(bphash_detect PRIVATE bphash)

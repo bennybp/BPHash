@@ -10,13 +10,14 @@
 #include <set>
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::set */
 template<typename Key, typename Compare, typename Alloc>
-struct ObjectHasher<std::set<Key, Compare, Alloc>> : public ContainerHasher<std::set<Key, Compare, Alloc>> { };
+void hash_object( const std::set<Key, Compare, Alloc> & s, Hasher & h)
+{
+    detail::hash_container_object(s, h);
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

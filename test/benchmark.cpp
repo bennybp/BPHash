@@ -12,9 +12,12 @@
 #include <cstdlib>
 
 #include "bphash/Hasher.hpp"
-#include "bphash/MurmurHash3_32.hpp"
-#include "bphash/MurmurHash3_64.hpp"
-#include "bphash/MurmurHash3_128.hpp"
+#include "bphash/types/vector.hpp"
+
+#include "bphash/MurmurHash3_32_x64.hpp"
+#include "bphash/MurmurHash3_32_x32.hpp"
+#include "bphash/MurmurHash3_64_x64.hpp"
+#include "bphash/MurmurHash3_128_x64.hpp"
 
 using namespace bphash;
 using namespace std::chrono;
@@ -58,39 +61,98 @@ int main(int argc, char ** argv)
 
     {
         auto time0 = timer_clock.now();
-        detail::MurmurHash3_32 mh32;
+        detail::MurmurHash3_32_x32 mh32;
         mh32.update(testdata_ptr, testdata_size);
         HashValue bph_32 = mh32.finalize();
         auto time1 = timer_clock.now();
         auto elapsed = duration_cast<microseconds>(time1-time0).count();
         double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
-        std::cout << "   32-bit hash: " << elapsed
+        std::cout << "   32-bit x32 hash: " << elapsed
                   << " ( " << conv_fac*rate << " GiB/sec)\n";
     }
 
     {
         auto time0 = timer_clock.now();
-        detail::MurmurHash3_64 mh64;
+        detail::MurmurHash3_32_x64 mh32;
+        mh32.update(testdata_ptr, testdata_size);
+        HashValue bph_32 = mh32.finalize();
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "   32-bit x64 hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    {
+        auto time0 = timer_clock.now();
+        detail::MurmurHash3_64_x64 mh64;
         mh64.update(testdata_ptr, testdata_size);
         HashValue bph_64 = mh64.finalize();
         auto time1 = timer_clock.now();
         auto elapsed = duration_cast<microseconds>(time1-time0).count();
         double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
-        std::cout << "   64-bit hash: " << elapsed
+        std::cout << "   64-bit x64 hash: " << elapsed
                   << " ( " << conv_fac*rate << " GiB/sec)\n";
     }
 
     {
         auto time0 = timer_clock.now();
-        detail::MurmurHash3_128 mh128;
+        detail::MurmurHash3_128_x64 mh128;
         mh128.update(testdata_ptr, testdata_size);
         HashValue bph_128 = mh128.finalize();
         auto time1 = timer_clock.now();
         auto elapsed = duration_cast<microseconds>(time1-time0).count();
         double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
-        std::cout << "  128-bit hash: " << elapsed
+        std::cout << "  128-bit x64 hash: " << elapsed
                   << " ( " << conv_fac*rate << " GiB/sec)\n";
     }
+
+    std::cout << "\nHashing of vector via make_hash\n";
+
+    {
+        auto time0 = timer_clock.now();
+        HashValue bph_32 = make_hash(HashType::Hash32_x32, testdata);
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "   32-bit x32 hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    {
+        auto time0 = timer_clock.now();
+        HashValue bph_32 = make_hash(HashType::Hash32_x64, testdata);
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "   32-bit x64 hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    {
+        auto time0 = timer_clock.now();
+        HashValue bph_64 = make_hash(HashType::Hash64_x64, testdata);
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "   64-bit x64 hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    {
+        auto time0 = timer_clock.now();
+        HashValue bph_128 = make_hash(HashType::Hash128_x64, testdata);
+        auto time1 = timer_clock.now();
+        auto elapsed = duration_cast<microseconds>(time1-time0).count();
+        double rate = static_cast<double>(nbytes)/static_cast<double>(elapsed);
+        std::cout << "  128-bit x64 hash: " << elapsed
+                  << " ( " << conv_fac*rate << " GiB/sec)\n";
+    }
+
+    std::cout << "\n\n";
+
+
+
 
     return 0;
 }

@@ -28,13 +28,13 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     list(APPEND BPHASH_CXX_FLAGS "-Wall;-Wextra;-pedantic")
 
     # for heavy-duty testing
-    #list(APPEND BPHASH_CXX_FLAGS "-Weverything")
-    #list(APPEND BPHASH_CXX_FLAGS "-Wno-c++98-compat")
-    #list(APPEND BPHASH_CXX_FLAGS "-Wno-c++98-compat-pedantic")
-    #list(APPEND BPHASH_CXX_FLAGS "-Wno-implicit-fallthrough")
-    #list(APPEND BPHASH_CXX_FLAGS "-Wno-padded")
-    #list(APPEND BPHASH_CXX_FLAGS "-Wno-weak-vtables")
-    #list(APPEND BPHASH_CXX_FLAGS "-Wno-covered-switch-default")
+    list(APPEND BPHASH_CXX_FLAGS "-Weverything")
+    list(APPEND BPHASH_CXX_FLAGS "-Wno-c++98-compat")
+    list(APPEND BPHASH_CXX_FLAGS "-Wno-c++98-compat-pedantic")
+    list(APPEND BPHASH_CXX_FLAGS "-Wno-implicit-fallthrough")
+    list(APPEND BPHASH_CXX_FLAGS "-Wno-padded")
+    list(APPEND BPHASH_CXX_FLAGS "-Wno-weak-vtables")
+    list(APPEND BPHASH_CXX_FLAGS "-Wno-covered-switch-default")
 endif()
   
 
@@ -42,9 +42,10 @@ endif()
 add_library(bphash ${BPHASH_BUILD_TYPE}
                    Hasher.cpp
                    Hash.cpp
-                   MurmurHash3_128.cpp
-                   MurmurHash3_64.cpp
-                   MurmurHash3_32.cpp
+                   MurmurHash3_128_x64.cpp
+                   MurmurHash3_64_x64.cpp
+                   MurmurHash3_32_x64.cpp
+                   MurmurHash3_32_x32.cpp
            )
 
 # Include the main source directory (my parent) as an include directory

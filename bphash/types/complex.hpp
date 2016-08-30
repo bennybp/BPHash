@@ -10,20 +10,14 @@
 #include <complex>
 
 namespace bphash {
-namespace detail {
 
 /*! \brief Hashing of std::complex */
 template<typename T>
-struct ObjectHasher<std::complex<T>> : public is_hashable<T>
+void hash_object( const std::complex<T> & a, Hasher & h)
 {
-    static void
-    hash(Hasher & hasher, const std::complex<T> & obj)
-    {
-        hasher(obj.real(), obj.imag());
-    }
-};
+    h(a.real(), a.imag());
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

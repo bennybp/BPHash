@@ -12,9 +12,10 @@
 #include <sstream>
 
 #include "bphash/Hasher.hpp"
-#include "bphash/MurmurHash3_32.hpp"
-#include "bphash/MurmurHash3_64.hpp"
-#include "bphash/MurmurHash3_128.hpp"
+#include "bphash/MurmurHash3_32_x32.hpp"
+#include "bphash/MurmurHash3_32_x64.hpp"
+#include "bphash/MurmurHash3_64_x64.hpp"
+#include "bphash/MurmurHash3_128_x64.hpp"
 
 #include "MurmurHash3_reference.h" // in this directory
 
@@ -39,9 +40,9 @@ void test_offset(detail::HashImpl & hasher,
                  const std::vector<uint8_t> & testdata,
                  size_t offset, size_t blocksize,
                  const HashValue & reference,
-                 int hashsize)
+                 int hashsize, int bitness)
 {
-    std::cout << "Testing " << hashsize << "-bit hash,"
+    std::cout << "Testing " << hashsize << "-bit x" << bitness << " hash,"
               << " offset " << offset
               << " blocksize " << blocksize << " ... ";
 
@@ -91,76 +92,89 @@ int main(void)
     std::vector<uint8_t> testdata(TEST_SIZE);
     random_fill(testdata);
 
-    HashValue ref_32(4);
-    HashValue ref_64(8);
-    HashValue ref_128(16);
-
-    HashValue bph_32;
-    HashValue bph_64;
-    HashValue bph_128;
+    HashValue ref_32_x32(4);
+    HashValue ref_32_x64(4);
+    HashValue ref_64_x64(8);
+    HashValue ref_128_x64(16);
 
     const void * testdata_ptr = testdata.data();
     const size_t testdata_size = testdata.size();
     const int testdata_size_int = static_cast<int>(testdata_size);
 
     // calculate the reference values
-    MurmurHash3_x86_32(testdata_ptr, testdata_size_int, 0, ref_32.data());
-    MurmurHash3_x64_128(testdata_ptr, testdata_size_int, 0, ref_128.data());
-    ref_64 = truncate_hash(ref_128, 8);
+    MurmurHash3_x86_32(testdata_ptr, testdata_size_int, 0, ref_32_x32.data());
+    MurmurHash3_x64_128(testdata_ptr, testdata_size_int, 0, ref_128_x64.data());
+    ref_32_x64 = truncate_hash(ref_128_x64, 4);
+    ref_64_x64 = truncate_hash(ref_128_x64, 8);
+
+    detail::MurmurHash3_32_x32 mh32_x32;
+    detail::MurmurHash3_32_x64 mh32_x64;
+    detail::MurmurHash3_64_x64 mh64_x64;
+    detail::MurmurHash3_128_x64 mh128_x64;
+
+    mh32_x32.update(testdata_ptr, testdata_size);
+    mh32_x64.update(testdata_ptr, testdata_size);
+    mh64_x64.update(testdata_ptr, testdata_size);
+    mh128_x64.update(testdata_ptr, testdata_size);
+
+    auto bph_32_x32 = mh32_x32.finalize();
+    auto bph_32_x64 = mh32_x64.finalize();
+    auto bph_64_x64 = mh64_x64.finalize();
+    auto bph_128_x64 = mh128_x64.finalize();
 
 
-    detail::MurmurHash3_32 mh32;
-    detail::MurmurHash3_64 mh64;
-    detail::MurmurHash3_128 mh128;
+    std::string ref_32_x32_str = hash_to_string(ref_32_x32);
+    std::string ref_32_x64_str = hash_to_string(ref_32_x64);
+    std::string ref_64_x64_str = hash_to_string(ref_64_x64);
+    std::string ref_128_x64_str = hash_to_string(ref_128_x64);
 
-    mh32.update(testdata_ptr, testdata_size);
-    mh64.update(testdata_ptr, testdata_size);
-    mh128.update(testdata_ptr, testdata_size);
-
-    bph_32 = mh32.finalize();
-    bph_64 = mh64.finalize();
-    bph_128 = mh128.finalize();
-
-
-    std::string ref_32_str = hash_to_string(ref_32);
-    std::string ref_64_str = hash_to_string(ref_64);
-    std::string ref_128_str = hash_to_string(ref_128);
-
-    std::string bph_32_str = hash_to_string(bph_32);
-    std::string bph_64_str = hash_to_string(bph_64);
-    std::string bph_128_str = hash_to_string(bph_128);
+    std::string bph_32_x32_str = hash_to_string(bph_32_x32);
+    std::string bph_32_x64_str = hash_to_string(bph_32_x64);
+    std::string bph_64_x64_str = hash_to_string(bph_64_x64);
+    std::string bph_128_x64_str = hash_to_string(bph_128_x64);
 
     try {
 
     std::cout << "\n";
-    std::cout << "Reference 32-bit hash:  " << ref_32_str << "\n";
-    std::cout << "   BPHash 32-bit hash:  " << bph_32_str << "\n";
+    std::cout << "32-bit hash, x32\n";
+    std::cout << "Reference:  " << ref_32_x32_str << "\n";
+    std::cout << "   BPHash:  " << bph_32_x32_str << "\n";
     std::cout << "\n";
-    if(ref_32 != bph_32)
-        throw std::runtime_error("Mismatch on 32-bit hash");
+    if(ref_32_x32 != bph_32_x32)
+        throw std::runtime_error("Mismatch on 32-bit x64 hash");
 
-    std::cout << "Reference 64-bit hash:  " << ref_64_str << "\n";
-    std::cout << "   BPHash 64-bit hash:  " << bph_64_str << "\n";
+    std::cout << "32-bit hash, x64\n";
+    std::cout << "Reference:  " << ref_32_x64_str << "\n";
+    std::cout << "   BPHash:  " << bph_32_x64_str << "\n";
     std::cout << "\n";
-    if(ref_64 != bph_64)
-        throw std::runtime_error("Mismatch on 64-bit hash");
+    if(ref_32_x64 != bph_32_x64)
+        throw std::runtime_error("Mismatch on 32-bit x64 hash");
 
-
-    std::cout << "Reference 128-bit hash: " << ref_128_str << "\n";
-    std::cout << "   BPHash 128-bit hash: " << bph_128_str << "\n";
+    std::cout << "64-bit hash, x64\n";
+    std::cout << "Reference:  " << ref_64_x64_str << "\n";
+    std::cout << "   BPHash:  " << bph_64_x64_str << "\n";
     std::cout << "\n";
-    if(ref_128 != bph_128)
-        throw std::runtime_error("Mismatch on 128-bit hash");
+    if(ref_64_x64 != bph_64_x64)
+        throw std::runtime_error("Mismatch on 64-bit x64 hash");
+
+    std::cout << "128-bit hash, x64\n";
+    std::cout << "Reference:  " << ref_128_x64_str << "\n";
+    std::cout << "   BPHash:  " << bph_128_x64_str << "\n";
+    std::cout << "\n";
+    if(ref_128_x64 != bph_128_x64)
+        throw std::runtime_error("Mismatch on 128-bit x64 hash");
 
 
     // try bphash with different offsets (to test progressive hashing
     for(size_t i = 0; i <= 18; i++)
     for(size_t j = 0; j <= 1150; j += 23) // purposely odd numbers
     {
-        test_offset(mh32,  testdata, i, j, ref_32,  32);
-        test_offset(mh64,  testdata, i, j, ref_64,  64);
-        test_offset(mh128, testdata, i, j, ref_128, 128);
+        test_offset(mh32_x32,  testdata, i, j, ref_32_x32,  32, 32);
+        test_offset(mh32_x64,  testdata, i, j, ref_32_x64,  32, 64);
+        test_offset(mh64_x64,  testdata, i, j, ref_64_x64,  64, 64);
+        test_offset(mh128_x64, testdata, i, j, ref_128_x64, 128, 64);
     }
+
     std::cout << "\n";
 
     }

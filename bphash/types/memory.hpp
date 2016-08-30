@@ -66,53 +66,31 @@ detail::PointerWrapper<T> hash_pointer(const std::shared_ptr<T[]> & ptr, size_t 
 }
 */
 
-namespace detail {
 
 
 /*! \brief Hashing of std::unique_ptr
  *
  * It is assumed that the pointer points to a single element.
- * If not, you must wrap the pointer in a PointerWrapper manually (via hash_pointer).
+ * If not, you must wrap the pointer with hash_pointer.
  */
 template<typename T, typename Deleter>
-struct ObjectHasher<std::unique_ptr<T, Deleter>> : public is_hashable<T>
+void hash_object( const std::unique_ptr<T, Deleter> & p, Hasher & h)
 {
-    template<typename U = T>
-    static
-    typename std::enable_if<is_hashable<U>::value, void>::type
-    hash(Hasher & hasher, const std::unique_ptr<U, Deleter> & obj)
-    {
-        hasher(hash_pointer(obj));
-    }
-
-    template<typename U = T>
-    static
-    typename std::enable_if<!is_hashable<U>::value, void>::type
-    hash(Hasher & hasher, const std::unique_ptr<U, Deleter> & obj)
-    {
-        hasher(hash_pointer(obj));
-    }
-};
+    h(hash_pointer(p)); 
+}
 
 
 /*! \brief Hashing of std::shared_ptr
  *
  * It is assumed that the pointer points to a single element.
- * If not, you must wrap the pointer in a PointerWrapper manually (via hash_pointer).
+ * If not, you must wrap the pointer with hash_pointer.
  */
 template<typename T>
-struct ObjectHasher<std::shared_ptr<T>> : public is_hashable<T>
+void hash_object( const std::shared_ptr<T> & p, Hasher & h)
 {
-    template<typename U = T>
-    static
-    typename std::enable_if<is_hashable<U>::value, void>::type
-    hash(Hasher & hasher, const std::shared_ptr<U> & obj)
-    {
-        hasher(hash_pointer(obj));
-    }
-};
+    h(hash_pointer(p)); 
+}
 
 
-} // close namespace detail
 } // close namespace bphash
 

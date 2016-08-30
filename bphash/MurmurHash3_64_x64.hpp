@@ -1,10 +1,10 @@
 /*! \file
- * \brief MurmurHash3_64 hash implementation (header)
+ * \brief MurmurHash3_64_x64 hash implementation (header)
  */
 
 #pragma once
 
-#include "bphash/MurmurHash3_128.hpp"
+#include "bphash/MurmurHash3_128_x64.hpp"
 
 namespace bphash {
 namespace detail {
@@ -25,16 +25,16 @@ namespace detail {
  * This is not a cryptographic hash, so if you are using it as
  * one, you are very, very wrong.
  */
-class MurmurHash3_64 : public MurmurHash3_128
+class MurmurHash3_64_x64 : public MurmurHash3_128_x64
 {
     public:
-        MurmurHash3_64(void) = default;
-        ~MurmurHash3_64(void) = default;
+        MurmurHash3_64_x64(void) = default;
+        ~MurmurHash3_64_x64(void) = default;
 
-        MurmurHash3_64(const MurmurHash3_64 &) = default;
-        MurmurHash3_64 & operator=(const MurmurHash3_64 &) = default;
-        MurmurHash3_64(MurmurHash3_64 &&) = default;
-        MurmurHash3_64 & operator=(MurmurHash3_64 &&) = default;
+        MurmurHash3_64_x64(const MurmurHash3_64_x64 &) = default;
+        MurmurHash3_64_x64 & operator=(const MurmurHash3_64_x64 &) = default;
+        MurmurHash3_64_x64(MurmurHash3_64_x64 &&) = default;
+        MurmurHash3_64_x64 & operator=(MurmurHash3_64_x64 &&) = default;
 
         /////////////////////////////////
         // Virtual functions of HashImpl
