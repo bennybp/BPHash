@@ -38,15 +38,20 @@ class MurmurHash3_128_x64 : public HashImpl
 
         std::array<uint8_t, 16> buffer_;   //!< Buffer for updating blocks, and any left over
 
-        size_t len_;     //!< Total amount already hashed
-        int nbuffer_;    //!< Number of elements in the buffer
+        size_t len_;      //!< Total amount already hashed
+        size_t nbuffer_;  //!< Number of elements in the buffer
 
-        /*! \brief Hash 16 bytes of data in buffer_
+        /*! \brief Hash 16 bytes of data in a buffer
          *
-         * This does NOT handle any tail/remainder, so buffer_
-         * must be full
+         * This does NOT handle any tail/remainder, so the buffer must contain
+         * at least 16 bytes
          */
-        void update_block_(void);
+        void update_block_(uint8_t const * data);
+
+        void update_via_buffer_(uint8_t const * data, size_t nbytes);
+
+        void update_inplace_(uint8_t const * data, size_t nbytes);
+
 
     public:
         MurmurHash3_128_x64(void);
@@ -62,6 +67,8 @@ class MurmurHash3_128_x64 : public HashImpl
         /////////////////////////////////
 
         virtual void update(void const * buffer, size_t nbytes);
+
+        virtual void pad_out(void);
 
         virtual HashValue finalize(void);
 

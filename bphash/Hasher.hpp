@@ -174,13 +174,14 @@ class Hasher
                           "  ***  (such as <bphash/types/string.hpp>) or to declare a hash member function or  ***\n"
                           "  ***  free function?                                                               ***\n");
 
-            // hash the type of the object
+
+            // Hash the object itself
+            hash_single_(obj);
+
+            // Now hash the type of the object
             const char * typestr = typeid(T).name();
             size_t len = strlen(typestr);
-            add_data(static_cast<void const *>(typestr), len);
-
-            // Now hash the object itself
-            hash_single_(obj);
+            add_data(static_cast<void const *>(typestr), len, true);
 
             // and the rest
             (*this)(objs...);
@@ -192,9 +193,11 @@ class Hasher
          * \param [in] data Pointer to the data to hash
          * \param [in] nbytes Number of bytes of \p data to hash
          */
-        void add_data(void const * data, size_t nbytes)
+        void add_data(void const * data, size_t nbytes, bool pad)
         {
             hashimpl_->update(data, nbytes);
+            if(pad)
+                hashimpl_->pad_out();
         }
 
 
@@ -317,13 +320,13 @@ void hash_object(const detail::PointerWrapper<T> & pw, Hasher & h)
 {
     if(pw.ptr != nullptr)
     {
-        h.add_data(&pw.len, sizeof(pw.len));
-        h.add_data(pw.ptr, pw.len);
+        h.add_data(&pw.len, sizeof(pw.len), true);
+        h.add_data(pw.ptr, pw.len, true);
     }
     else
     {
         size_t n = 0;
-        h.add_data(&n, sizeof(size_t));
+        h.add_data(&n, sizeof(size_t), true);
     }
 }
 
@@ -361,7 +364,7 @@ inline void hash_object(const char * p, Hasher & h)
     inline void hash_object(const type & a, Hasher & h) \
     {\
         h.add_data(static_cast<void const *>(&a), \
-                   static_cast<size_t>(sizeof(type))); \
+                   static_cast<size_t>(sizeof(type)), false); \
     }\
 
 DECLARE_FUNDAMENTAL_HASHER(bool)

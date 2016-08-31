@@ -50,6 +50,18 @@ void MurmurHash3_32_x32::reset(void)
 }
 
 
+void MurmurHash3_32_x32::pad_out(void)
+{
+    if(nbuffer_ != 0)
+    {
+        std::fill(buffer_.begin() + nbuffer_,
+                  buffer_.end(),
+                  0);
+        update_block_();
+        nbuffer_ = 0;
+    }
+}
+
 void MurmurHash3_32_x32::update(void const * buffer, size_t nbytes)
 {
     if(nbytes == 0)

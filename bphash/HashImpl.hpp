@@ -30,6 +30,14 @@ class HashImpl
         virtual void update(void const * buffer, size_t nbytes) = 0;
 
 
+        /*! \brief Pad out the hashing data
+         *
+         * After this, the next call to update should start at an appropriate
+         * boundary
+         */
+        virtual void pad_out(void) = 0;
+
+
         /*! \brief Finish hashing and report the hash
          *
          * Any remaining data (that doesn't fill out a block) will be hashed.

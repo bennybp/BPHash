@@ -63,6 +63,8 @@ class MurmurHash3_32_x32 : public HashImpl
 
         virtual void update(void const * buffer, size_t nbytes);
 
+        virtual void pad_out(void);
+
         virtual HashValue finalize(void);
 
         virtual void reset(void);
