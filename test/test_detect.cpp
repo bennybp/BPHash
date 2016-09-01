@@ -77,10 +77,79 @@ void hash_object(const HashFreeTemplate<T> & hft, Hasher & h)
 }
 
 
+#define IS_HASHABLE(type)     static_assert(is_hashable<type>::value, "Type " #type  " is not hashable, but should be")
+#define IS_NOT_HASHABLE(type) static_assert(!is_hashable<type>::value, "Type " #type " is hashable, but shouldn't be")
 
 int main(void)
 {
     HashType htype = HashType::Hash128;
+
+    // Test detection of fundamental types
+    IS_HASHABLE(char);
+    IS_HASHABLE(unsigned char);
+    IS_HASHABLE(signed char);
+    IS_HASHABLE(unsigned short);
+    IS_HASHABLE(short);
+    IS_HASHABLE(unsigned int);
+    IS_HASHABLE(int);
+    IS_HASHABLE(unsigned long);
+    IS_HASHABLE(long);
+    IS_HASHABLE(unsigned long long);
+    IS_HASHABLE(long long);
+    IS_HASHABLE(float);
+    IS_HASHABLE(double);
+    IS_HASHABLE(long double);
+
+    // Complex numbers
+    IS_HASHABLE(std::complex<char>);
+    IS_HASHABLE(std::complex<unsigned char>);
+    IS_HASHABLE(std::complex<signed char>);
+    IS_HASHABLE(std::complex<unsigned short>);
+    IS_HASHABLE(std::complex<short>);
+    IS_HASHABLE(std::complex<unsigned int>);
+    IS_HASHABLE(std::complex<int>);
+    IS_HASHABLE(std::complex<unsigned long>);
+    IS_HASHABLE(std::complex<long>);
+    IS_HASHABLE(std::complex<unsigned long long>);
+    IS_HASHABLE(std::complex<long long>);
+    IS_HASHABLE(std::complex<float>);
+    IS_HASHABLE(std::complex<double>);
+    IS_HASHABLE(std::complex<long double>);
+
+
+    // Pointers to fundamental types
+    IS_HASHABLE(char *);
+    IS_HASHABLE(unsigned char *);
+    IS_HASHABLE(signed char *);
+    IS_HASHABLE(unsigned short *);
+    IS_HASHABLE(short *);
+    IS_HASHABLE(unsigned int *);
+    IS_HASHABLE(int *);
+    IS_HASHABLE(unsigned long *);
+    IS_HASHABLE(long *);
+    IS_HASHABLE(unsigned long long *);
+    IS_HASHABLE(long long *);
+    IS_HASHABLE(float *);
+    IS_HASHABLE(double *);
+    IS_HASHABLE(long double *);
+
+    // Arrays should not be hashable
+    IS_NOT_HASHABLE(char []);
+    IS_NOT_HASHABLE(unsigned char []);
+    IS_NOT_HASHABLE(signed char []);
+    IS_NOT_HASHABLE(unsigned short []);
+    IS_NOT_HASHABLE(short []);
+    IS_NOT_HASHABLE(unsigned int []);
+    IS_NOT_HASHABLE(int []);
+    IS_NOT_HASHABLE(unsigned long []);
+    IS_NOT_HASHABLE(long []);
+    IS_NOT_HASHABLE(unsigned long long []);
+    IS_NOT_HASHABLE(long long []);
+    IS_NOT_HASHABLE(float []);
+    IS_NOT_HASHABLE(double []);
+    IS_NOT_HASHABLE(long double []);
+
+
 
     static_assert(is_hashable<HashMember>::value, "Failed test for Hash Member");
 

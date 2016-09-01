@@ -19,11 +19,9 @@ namespace bphash {
  * \return The wrapped pointer that is ready for hashing
  */
 template<typename T, typename Deleter>
-detail::PointerWrapper<T> hash_pointer(const std::unique_ptr<T, Deleter> & ptr, size_t len = 1)
+PointerWrapper<T> hash_pointer(const std::unique_ptr<T, Deleter> & ptr, size_t len = 1)
 {
-    return detail::PointerWrapper<T> {typeid(std::unique_ptr<T, Deleter>).name(),
-                                      ptr.get(), len
-                                     };
+    return PointerWrapper<T> {ptr.get(), len};
 }
 
 /*! \brief Create a wrapper around a unique_ptr
@@ -35,11 +33,9 @@ detail::PointerWrapper<T> hash_pointer(const std::unique_ptr<T, Deleter> & ptr, 
  * \return The wrapped pointer that is ready for hashing
  */
 template<typename T, typename Deleter>
-detail::PointerWrapper<T> hash_pointer(const std::unique_ptr<T[], Deleter> & ptr, size_t len)
+PointerWrapper<T> hash_pointer(const std::unique_ptr<T[], Deleter> & ptr, size_t len)
 {
-    return detail::PointerWrapper<T> {typeid(std::unique_ptr<T[], Deleter>).name(),
-                                      ptr.get(), len
-                                     };
+    return PointerWrapper<T> {ptr.get(), len};
 }
 
 /*! \brief Create a wrapper around a shared_ptr
@@ -49,19 +45,17 @@ detail::PointerWrapper<T> hash_pointer(const std::unique_ptr<T[], Deleter> & ptr
  * \return The wrapped pointer that is ready for hashing
  */
 template<typename T>
-detail::PointerWrapper<T> hash_pointer(const std::shared_ptr<T> & ptr, size_t len = 1)
+PointerWrapper<T> hash_pointer(const std::shared_ptr<T> & ptr, size_t len = 1)
 {
-    return detail::PointerWrapper<T> {typeid(std::shared_ptr<T>).name(),
-                                      ptr.get(), len
-                                     };
+    return PointerWrapper<T> {ptr.get(), len};
 }
 
 
 /*
 template<typename T>
-detail::PointerWrapper<T> hash_pointer(const std::shared_ptr<T[]> & ptr, size_t len)
+PointerWrapper<T> hash_pointer(const std::shared_ptr<T[]> & ptr, size_t len)
 {
-    return detail::PointerWrapper<T>{typeid(std::shared_ptr<T[]>).name(),
+    return PointerWrapper<T>{typeid(std::shared_ptr<T[]>).name(),
                                      ptr.get(), len};
 }
 */

@@ -12,7 +12,6 @@ namespace bphash {
  *
  * This is useful for `unordered_map`, etc, that require hashing of the key
  * type.
- *
  */
 template<typename T>
 struct StdHash

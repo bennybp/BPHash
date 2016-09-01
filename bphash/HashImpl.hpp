@@ -24,10 +24,10 @@ class HashImpl
          * any that doesn't fill out a whole block will be stored
          * until next time
          *
-         * \param [in] buffer The raw data to hash
-         * \param [in] nbytes Number of bytes in the buffer
+         * \param [in] data The raw data to hash
+         * \param [in] nbytes Number of bytes pointed to by data
          */
-        virtual void update(void const * buffer, size_t nbytes) = 0;
+        virtual void update(void const * data, size_t nbytes) = 0;
 
 
         /*! \brief Pad out the hashing data

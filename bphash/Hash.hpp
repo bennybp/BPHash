@@ -44,8 +44,8 @@ HashValue truncate_hash(const HashValue & hash, size_t nbytes);
 template<typename T>
 T convert_hash(const HashValue & hash)
 {
-    static_assert(std::is_arithmetic<T>::value,
-                  "Type to convert to must be an arithmetic type");
+    static_assert(std::is_integral<T>::value,
+                  "Type to convert to must be an integral type");
 
     const size_t wantedbytes = sizeof(T);
     HashValue tmphash = truncate_hash(hash, wantedbytes); // will pad with zero

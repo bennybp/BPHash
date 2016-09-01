@@ -50,20 +50,20 @@ void MurmurHash3_128_x64::reset(void)
 }
 
 
-void MurmurHash3_128_x64::update(void const * buffer, size_t nbytes)
+void MurmurHash3_128_x64::update(void const * data, size_t nbytes)
 {
     if(nbytes == 0)
         return; // got nothing to do
 
     // cast to an array of bytes
-    const uint8_t * data = static_cast<const uint8_t*>(buffer);
+    const uint8_t * data_conv = static_cast<const uint8_t*>(data);
 
     // Are we doing this in-place (ie, without copying to a temporary butter)?
     // This is true if we don't have leftovers stored already
     if(nbuffer_ == 0)
-        update_inplace_(data, nbytes);
+        update_inplace_(data_conv, nbytes);
     else
-        update_via_buffer_(data, nbytes);
+        update_via_buffer_(data_conv, nbytes);
 }
 
 

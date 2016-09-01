@@ -66,7 +66,7 @@ class MurmurHash3_128_x64 : public HashImpl
         // Virtual functions of HashImpl
         /////////////////////////////////
 
-        virtual void update(void const * buffer, size_t nbytes);
+        virtual void update(void const * data, size_t nbytes);
 
         virtual void pad_out(void);
 
