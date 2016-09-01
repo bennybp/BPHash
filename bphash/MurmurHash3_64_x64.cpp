@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3_64_x64 hash implementation (source)
+ * \brief MurmurHash3 64-bit x64 hash (source)
  */
 
 #include "bphash/MurmurHash3_64_x64.hpp"
@@ -10,8 +10,7 @@ namespace detail {
 HashValue MurmurHash3_64_x64::finalize(void)
 {
     HashValue hv = MurmurHash3_128_x64::finalize();
-    hv.resize(8, 0);
-    return hv;
+    return truncate_hash(hv, 8);
 }
 
 

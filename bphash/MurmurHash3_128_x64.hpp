@@ -1,10 +1,9 @@
 /*! \file
- * \brief MurmurHash3_128_x64 hash implementation (header)
+ * \brief MurmurHash3 128-bit x64 hash (header)
  */
 
 #pragma once
 
-#include <cstdint>
 #include <array>
 
 #include "bphash/HashImpl.hpp"
@@ -12,20 +11,18 @@
 namespace bphash {
 namespace detail {
 
-/*! \brief Implementation of MurmurHash3 128-bit hash
- * The hash algorithm implemented here is 128-bit MurmurHash3,
- * by Austin Appleby. It has been placed in the public domain
- * by the author.
+/*! \brief Implementation of MurmurHash3 128-bit x64 hash
+ *
+ * This algorithm is the 128-bit MurmurHash3 hash, 
+ * by Austin Appleby.
+ *
  *
  * The code here is adapted from the smhasher project at
- * https://github.com/aappleby/smhasher. Mostly, it has
- * been converted to a progressive version.
+ * https://github.com/aappleby/smhasher. It has been placed in
+ * the public domain by the author.
  *
  * No care has been taken to work with different endianness, etc,
- * since that is pretty much beyond the scope of the project.
- *
- * This is not a cryptographic hash, so if you are using it as
- * one, you are very, very wrong.
+ * since that is beyond the scope of the project.
  */
 class MurmurHash3_128_x64 : public HashImpl
 {
@@ -73,3 +70,4 @@ class MurmurHash3_128_x64 : public HashImpl
 
 } // close namespace detail
 } // close namespace bphash
+

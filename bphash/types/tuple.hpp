@@ -1,7 +1,6 @@
 /*! \file
  *
  * \brief Hashing of std::tuple
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 #pragma once

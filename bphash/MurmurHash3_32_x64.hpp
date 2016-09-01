@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3_32_x64 hash implementation (header)
+ * \brief MurmurHash3 32-bit x64 hash (header)
  */
 
 #pragma once
@@ -9,21 +9,11 @@
 namespace bphash {
 namespace detail {
 
-/*! \brief Implementation of MurmurHash3 64-bit hash
+/*! \brief Implementation of MurmurHash3 32-bit x64 hash
  *
- * This hash calculates the 128-bit hash and then returns only
- * the first 32-bits. This is found to be faster than running the
- * 32-bit x32 hash on a 64-bit machine.
- *
- * The code here is adapted from the smhasher project at
- * https://github.com/aappleby/smhasher. Mostly, it has
- * been converted to a progressive version.
- *
- * No care has been taken to work with different endianness, etc,
- * since that is pretty much beyond the scope of the project.
- *
- * This is not a cryptographic hash, so if you are using it as
- * one, you are very, very wrong.
+ * This hash calculates the 128-bit using MurmurHash3, and
+ * then returns only the first 32-bits. This is found to be
+ * faster than running the 32-bit x32 hash on a 64-bit machine.
  */
 class MurmurHash3_32_x64 : public MurmurHash3_128_x64
 {
@@ -46,3 +36,4 @@ class MurmurHash3_32_x64 : public MurmurHash3_128_x64
 
 } // close namespace detail
 } // close namespace bphash
+

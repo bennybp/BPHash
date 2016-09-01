@@ -20,10 +20,6 @@ class HashImpl
 
         /*! \brief Add some data to the hash
          *
-         * Any remaining from the previous call will be done, and
-         * any that doesn't fill out a whole block will be stored
-         * until next time
-         *
          * \param [in] data The raw data to hash
          * \param [in] nbytes Number of bytes pointed to by data
          */
@@ -32,8 +28,8 @@ class HashImpl
 
         /*! \brief Finish hashing and report the hash
          *
-         * Any remaining data (that doesn't fill out a block) will be hashed.
-         * Then, any finalization steps will be done and the hash returned.
+         * Finish hashing any remaining data if necessary, and perform
+         * and last steps. Then, return the hash.
          *
          * \return The computed hash of all the data that had been added
          */

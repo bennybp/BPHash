@@ -1,7 +1,6 @@
 /*! \file
  *
  * \brief Helpers for hashing STL containers
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 #pragma once

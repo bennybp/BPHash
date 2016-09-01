@@ -10,10 +10,7 @@
 #include "MurmurHash3_32_x64.hpp"
 #include "MurmurHash3_32_x32.hpp"
 
-#include <stdexcept>
-
 namespace bphash {
-
 
 Hasher::Hasher(HashType type)
 {
@@ -39,9 +36,6 @@ Hasher::Hasher(HashType type)
         case HashType::Hash32_x32:
             hashimpl_ = std::unique_ptr<detail::HashImpl>(new detail::MurmurHash3_32_x32);
             break;
-
-        default:
-            throw std::logic_error("Unhandled HashType");
     }
 }
 

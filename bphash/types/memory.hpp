@@ -1,7 +1,6 @@
 /*! \file
  *
  * \brief Hashing of std::unique_ptr and std::shared_ptr
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 #pragma once
@@ -68,7 +67,7 @@ PointerWrapper<T> hash_pointer(const std::shared_ptr<T[]> & ptr, size_t len)
  * If not, you must wrap the pointer with hash_pointer.
  */
 template<typename T, typename Deleter>
-void hash_object( const std::unique_ptr<T, Deleter> & p, Hasher & h)
+void hash_object(const std::unique_ptr<T, Deleter> & p, Hasher & h)
 {
     h(hash_pointer(p)); 
 }
@@ -80,7 +79,7 @@ void hash_object( const std::unique_ptr<T, Deleter> & p, Hasher & h)
  * If not, you must wrap the pointer with hash_pointer.
  */
 template<typename T>
-void hash_object( const std::shared_ptr<T> & p, Hasher & h)
+void hash_object(const std::shared_ptr<T> & p, Hasher & h)
 {
     h(hash_pointer(p)); 
 }

@@ -1,5 +1,5 @@
 /*! \file
- * \brief Detection of member functions and free functions
+ * \brief Trait classes for detecting if something is hashable
  */
 
 #pragma once
@@ -7,7 +7,7 @@
 #include "bphash/Hasher_fwd.hpp"
 
 namespace bphash {
-
+namespace detail {
 
 /*! \brief Detects if a class has a hash() member function with the
  *         appropriate signature
@@ -61,6 +61,52 @@ class detect_pointer_wrapper : public std::false_type { };
 
 template<typename T>
 class detect_pointer_wrapper<PointerWrapper<T>> : public std::true_type { };
+
+
+} // close namespace detail
+
+
+
+/*! \brief Trait class that determines if a type is hashable or not
+ *
+ * Whether or not a type is hashable can be determined via is_hashable<Type>::value
+ *
+ * This also works with multiple types. If multiple types are specified, \p value is
+ * only true if all are hashable.
+ */
+template<typename ... Targs>
+struct is_hashable;
+
+
+template<typename T>
+struct is_hashable<T>
+{
+    using my_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
+    static constexpr bool value = std::is_fundamental<T>::value ||
+                                  detail::detect_pointer_wrapper<my_type>::value ||
+                                  detail::detect_hash_member<my_type>::value ||
+                                  detail::detect_hash_free_function<my_type>::value ||
+                                  std::is_enum<my_type>::value;
+};
+
+
+template<typename T>
+struct is_hashable<T *>
+{
+    using my_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
+    static constexpr bool value = is_hashable<my_type>::value;
+};
+
+
+template<typename T, typename ... Targs>
+struct is_hashable<T, Targs...>
+{
+    static constexpr bool value = is_hashable<T>::value &&
+                                  is_hashable<Targs...>::value;
+};
+
 
 } // close namespace bphash
 

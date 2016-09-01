@@ -1,7 +1,6 @@
 /*! \file
  *
  * \brief A convenience header that includes all the types supported by bphash
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 #pragma once

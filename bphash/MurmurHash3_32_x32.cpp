@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3_32_x32 hash implementation (source)
+ * \brief MurmurHash3 32-bit x32 hash (source)
  */
 
 #include "bphash/MurmurHash3_32_x32.hpp"

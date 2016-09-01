@@ -1,7 +1,6 @@
 /*! \file
  *
  * \brief Hashing of std::unordered_set
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 #pragma once

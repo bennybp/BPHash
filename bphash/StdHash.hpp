@@ -1,5 +1,5 @@
 /*! \file
- * \brief A class that can be used for std::hash
+ * \brief A class that can be used in place of std::hash
  */
 
 #pragma once
@@ -18,8 +18,10 @@ struct StdHash
 {
     size_t operator()(const T & obj) const
     {
-        return convert_hash<size_t>(MakeHash(HashType::Hash64, obj));
+        auto h = make_hash(HashType::Hash64, obj);
+        return convert_hash<size_t>(h);
     }
 };
 
 } // close namespace bphash
+

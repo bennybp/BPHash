@@ -1,7 +1,6 @@
 /*! \file
  *
  * \brief Hashing of std::array
- * \author Benjamin Pritchard (ben@bennyp.org)
  */
 
 #pragma once

@@ -51,6 +51,9 @@ struct PointerWrapper
 
 /*! \brief Wrap a raw pointer so that it can be hashed
  *
+ * Small helper function to help create PointerWrapper objects
+ * more cleanly.
+ *
  * \param [in] ptr Pointer to be hashed
  * \param [in] len Number of elements of \p T that \p ptr points to
  * \return The pointer information wrapped in PointerWrapper
@@ -60,49 +63,6 @@ PointerWrapper<T> hash_pointer(const T * ptr, size_t len = 1)
 {
     return PointerWrapper<T>{ptr, len};
 }
-
-
-
-/*! \brief Trait class that determines if a type is hashable or not
- *
- * Whether or not a type is hashable can be determined via is_hashable<Type>::value
- *
- * This also works with multiple types. If multiple types are specified, \p value is
- * only true if all are hashable.
- */
-template<typename ... Targs>
-struct is_hashable;
-
-
-template<typename T>
-struct is_hashable<T>
-{
-    using my_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
-    static constexpr bool value = std::is_fundamental<T>::value ||
-                                  detect_pointer_wrapper<my_type>::value ||
-                                  detect_hash_member<my_type>::value ||
-                                  detect_hash_free_function<my_type>::value ||
-                                  std::is_enum<my_type>::value;
-};
-
-
-template<typename T>
-struct is_hashable<T *>
-{
-    using my_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
-    static constexpr bool value = is_hashable<my_type>::value;
-};
-
-
-template<typename T, typename ... Targs>
-struct is_hashable<T, Targs...>
-{
-    static constexpr bool value = is_hashable<T>::value &&
-                                  is_hashable<Targs...>::value;
-};
-
 
 
 
@@ -130,7 +90,7 @@ class Hasher
          *
          * Objects are progressively hashed until finalize() is called
          *
-         * Used to terminate variadic template
+         * This overload is used to terminate the variadic template
          */
         void operator()(void) { }
 
@@ -261,13 +221,14 @@ class Hasher
  * needing to manually create a Hasher object, etc.
  *
  * \param [in] type The type of hash to use
- * \param [in] args Objects to hash
+ * \param [in] objs Objects to hash
+ * \return Hash of the given data
  */
 template<typename ... Targs>
-HashValue make_hash(HashType type, const Targs &... args)
+HashValue make_hash(HashType type, const Targs &... objs)
 {
     Hasher hasher(type);
-    hasher(args...);
+    hasher(objs...);
     return hasher.finalize();
 }
 
@@ -283,6 +244,7 @@ HashValue make_hash(HashType type, const Targs &... args)
  * \param [in] type The type of hash to use
  * \param [in] first An iterator of the first object to hash
  * \param [in] last An iterator of the element following the last element to hash
+ * \return Hash of the given data
  */
 template<typename InputIterator>
 HashValue make_hash_range(HashType type, InputIterator first, InputIterator last)

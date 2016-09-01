@@ -1,10 +1,9 @@
 /*! \file
- * \brief MurmurHash3_32_x32 hash implementation (header)
+ * \brief MurmurHash3 32-bit x32 hash (header)
  */
 
 #pragma once
 
-#include <cstdint>
 #include <array>
 
 #include "bphash/HashImpl.hpp"
@@ -12,20 +11,18 @@
 namespace bphash {
 namespace detail {
 
-/*! \brief Implementation of MurmurHash3 32-bit hash
- * The hash algorithm implemented here is 32-bit MurmurHash3,
- * by Austin Appleby. It has been placed in the public domain
- * by the author.
+/*! \brief Implementation of MurmurHash3 32-bit x32 hash
+ *
+ * This algorithm is the 32-bit MurmurHash3 hash,
+ * by Austin Appleby. It is optimized for 32-bit
+ * architectures.
  *
  * The code here is adapted from the smhasher project at
- * https://github.com/aappleby/smhasher. Mostly, it has
- * been converted to a progressive version.
+ * https://github.com/aappleby/smhasher. It has been placed in
+ * the public domain by the author.
  *
  * No care has been taken to work with different endianness, etc,
- * since that is pretty much beyond the scope of the project.
- *
- * This is not a cryptographic hash, so if you are using it as
- * one, you are very, very wrong.
+ * since that is beyond the scope of the project.
  */
 class MurmurHash3_32_x32 : public HashImpl
 {
@@ -35,7 +32,7 @@ class MurmurHash3_32_x32 : public HashImpl
 
         uint32_t h_;  //!< The 32-bit hash
 
-        std::array<uint8_t, 4> buffer_;   //!< Buffer for updating blocks, and any left over
+        std::array<uint8_t, 4> buffer_;   //!< Holds any tail/remainder
 
         size_t nbuffer_;  //!< Number of elements in the buffer
         size_t len_;      //!< Total amount already hashed
@@ -71,3 +68,4 @@ class MurmurHash3_32_x32 : public HashImpl
 
 } // close namespace detail
 } // close namespace bphash
+

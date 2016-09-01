@@ -1,5 +1,5 @@
 /*! \file
- * \brief MurmurHash3_128_x64 hash implementation (source)
+ * \brief MurmurHash3 128-bit x64 hash (source)
  */
 
 #include "bphash/MurmurHash3_128_x64.hpp"

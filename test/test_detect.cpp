@@ -150,6 +150,12 @@ int main(void)
     IS_NOT_HASHABLE(long double []);
 
 
+    // Test a few pairs
+    static_assert(is_hashable<std::pair<int, int>>::value, "Failed test for pair");
+    static_assert(is_hashable<std::pair<const char, float>>::value, "Failed test for pair");
+    static_assert(is_hashable<std::pair<unsigned long, short>>::value, "Failed test for pair");
+    static_assert(!is_hashable<std::pair<HashMember_BadSig0, int>>::value, "Test");
+
 
     static_assert(is_hashable<HashMember>::value, "Failed test for Hash Member");
 
@@ -173,6 +179,8 @@ int main(void)
     
     static_assert(is_hashable<HashFreeTemplate<int>>::value, "Failed test for free hash function");
     static_assert(is_hashable<HashFreeTemplate<std::string>>::value, "Failed test for free hash function");
+
+
 
     HashMember hm{123, "This is a test string\n"};
     HashFree   hf{123, "This is a test string\n"};
