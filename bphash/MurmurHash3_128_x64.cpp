@@ -64,7 +64,7 @@ void MurmurHash3_128_x64::update(void const * data, size_t nbytes)
         // new data and hash the temporary buffer
 
         // Amount of space left in the buffer?
-        size_t nbytes_avail = bufsize_ - nbuffer_;
+        size_t nbytes_avail = 16 - nbuffer_;
     
         // How much of data should we actually copy?
         size_t tocopy = std::min(nbytes, nbytes_avail);
@@ -86,27 +86,20 @@ void MurmurHash3_128_x64::update(void const * data, size_t nbytes)
         data_conv += tocopy;
 
         // hash the buffer if it is full
-        if(nbuffer_ == bufsize_)
+        if(nbuffer_ == 16)
         {
-            update_block_(buffer_.data());
+            update_block_(buffer_.data(), 1);
             nbuffer_ = 0;
         }
     }
 
     // now continue hashing the data in place
-    while(nbytes >= bufsize_)
-    {
-        // Compute the hash for this block
-        update_block_(data_conv);
+    size_t nblocks = nbytes / 16;
+    update_block_(data_conv, nblocks);  // ok if nblocks == 0
 
-        // Move the data pointer
-        data_conv += bufsize_;
-
-        // How many bytes are left to do?
-        // Underflow won't happen because this loop won't run
-        // with nbytes < bufsize_
-        nbytes -= bufsize_;
-    }
+    // advance the pointer and calculate how much is left
+    nbytes -= (nblocks * 16);
+    data_conv += (nblocks * 16);
 
     // Leave any remainder in the main buffer
     // (we already know that nbytes < 16, or else
@@ -192,35 +185,40 @@ HashValue MurmurHash3_128_x64::finalize(void)
 ////////////////////////////////
 // Private member functions
 ////////////////////////////////
-void MurmurHash3_128_x64::update_block_(uint8_t const * data)
+void MurmurHash3_128_x64::update_block_(uint8_t const * data, size_t nblocks)
 {
-    // This function only does an entire 16-byte buffer
-    // (that is stored as private member buffer_)
+    // This function only does entire 16-byte blocks
+    // (passed in through the first parameter)
     const uint64_t * block64 = reinterpret_cast<const uint64_t *>(data);
 
-    uint64_t k1 = block64[0];
-    uint64_t k2 = block64[1];
+    for(size_t i = 0; i < nblocks; i++)
+    {
+        uint64_t k1 = block64[0];
+        uint64_t k2 = block64[1];
 
-    k1 *= c1;
-    k1  = rotl64(k1, 31);
-    k1 *= c2;
+        k1 *= c1;
+        k1  = rotl64(k1, 31);
+        k1 *= c2;
 
-    h1_ ^= k1;
-    h1_ = rotl64(h1_, 27);
-    h1_ += h2_;
-    h1_ = h1_*5+0x52dce729;
+        h1_ ^= k1;
+        h1_ = rotl64(h1_, 27);
+        h1_ += h2_;
+        h1_ = h1_*5+0x52dce729;
 
-    k2 *= c2;
-    k2  = rotl64(k2, 33);
-    k2 *= c1;
-    h2_ ^= k2;
+        k2 *= c2;
+        k2  = rotl64(k2, 33);
+        k2 *= c1;
+        h2_ ^= k2;
 
-    h2_ = rotl64(h2_, 31);
-    h2_ += h1_;
-    h2_ = h2_*5+0x38495ab5;
+        h2_ = rotl64(h2_, 31);
+        h2_ += h1_;
+        h2_ = h2_*5+0x38495ab5;
+
+        block64 += 2;
+    }
 
     // update how much we've actually hashed
-    len_ += 16;
+    len_ += nblocks * 16;
 }
 
 } // close namespace detail

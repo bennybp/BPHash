@@ -30,27 +30,24 @@ namespace detail {
 class MurmurHash3_128_x64 : public HashImpl
 {
     private:
-        static const size_t nbits_ = 16;
-        //static const size_t nblocks_ = 8;
-        static const size_t bufsize_ = nbits_;
-
         static const uint64_t c1 = (0x87c37b91114253d5LLU);
         static const uint64_t c2 = (0x4cf5ad432745937fLLU);
 
         uint64_t h1_; //!< First part of the 128-bit hash
         uint64_t h2_; //!< Second part of the 128-bit hash
 
-        std::array<uint8_t, bufsize_> buffer_;   //!< Holds any tail/remainder
+        std::array<uint8_t, 16> buffer_;   //!< Holds any tail/remainder
 
         size_t len_;      //!< Total amount already hashed
         size_t nbuffer_;  //!< Number of elements in the buffer
 
-        /*! \brief Hash 16 bytes of data in a buffer
+
+        /*! \brief Hash 16-byte blocks of data
          *
          * This does NOT handle any tail/remainder, so the buffer must contain
          * at least 16 bytes
          */
-        void update_block_(uint8_t const * data);
+        void update_block_(uint8_t const * data, size_t nblocks);
 
 
     public:

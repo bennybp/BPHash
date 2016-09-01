@@ -50,71 +50,65 @@ void MurmurHash3_32_x32::reset(void)
 }
 
 
-void MurmurHash3_32_x32::update(void const * buffer, size_t nbytes)
+void MurmurHash3_32_x32::update(void const * data, size_t nbytes)
 {
     if(nbytes == 0)
         return; // got nothing to do
 
     // cast to an array of bytes
-    const uint8_t * data = static_cast<const uint8_t*>(buffer);
+    const uint8_t * data_conv = static_cast<const uint8_t*>(data);
 
-    // total number of bytes to do is the amount passed, plus
-    // any left over from last time
-    size_t ntodo = nbytes + static_cast<size_t>(nbuffer_);
-
-
-    // If we still don't have a full buffer, just append to the
-    // buffer and return
-    if(ntodo < 4)
+    if(nbuffer_ != 0)
     {
-        // buffer_.begin() + nbuffer_ represents where we left off last time
-        std::copy(data, data + nbytes, buffer_.begin() + nbuffer_);
-        nbuffer_ = static_cast<int>(ntodo);
-        return;
+        // we have some leftover data. Add some from the
+        // new data and hash the temporary buffer
+
+        // Amount of space left in the buffer?
+        size_t nbytes_avail = 4 - nbuffer_;
+    
+        // How much of data should we actually copy?
+        size_t tocopy = std::min(nbytes, nbytes_avail);
+    
+        // copy it to the end of the buffer
+        std::copy(data_conv,
+                  data_conv + tocopy,
+                  buffer_.begin() + nbuffer_);
+    
+        // how much do we have in the buffer now?
+        nbuffer_ += tocopy;
+
+        // The new number of bytes to do in data
+        // This should not underflow since
+        // tocopy = std::min(nbytes, ...)
+        nbytes -= tocopy;
+
+        // Also advance the data pointer
+        data_conv += tocopy;
+
+        // hash the buffer if it is full
+        if(nbuffer_ == 4)
+        {
+            update_block_(buffer_.data(), 1);
+            nbuffer_ = 0;
+        }
     }
 
+    // now continue hashing the data in place
+    size_t nblocks = nbytes / 4;
+    update_block_(data_conv, nblocks);  // ok if nblocks == 0
 
-    // We actual have to do blocks
-    // So copy to the end of the internal buffer
-    //
-    // dataidx = next place to read from data
-    // (which is also where to stop for this initial copy)
-    // buffer_.begin() + nbuffer_ represents where we left off last time
-    size_t dataidx = 4 - static_cast<size_t>(nbuffer_);
-    std::copy(data, data + dataidx, buffer_.begin() + nbuffer_);
+    // advance the pointer and calculate how much is left
+    nbytes -= (nblocks * 4);
+    data_conv += (nblocks * 4);
 
-
-    do
+    // Leave any remainder in the main buffer
+    // (we already know that nbytes < 4, or else
+    // the while loop would have kept going)
+    if(nbytes != 0)
     {
-        // Hash what is currently in the buffer
-        update_block_();
-
-        // How much do we have left to do?
-        // Note: We know from above that, on first iteration, ntodo >= 4, so this
-        // should be safe
-        ntodo -= 4;
-
-        // Copy the next block to the buffer
-        // How much of data should we actually copy?
-        size_t tocopy = 4;
-
-        // Is here some left in data that won't fill the buffer?
-        if((dataidx + 4) >= nbytes)
-            tocopy = nbytes - dataidx;
-
-        // Actually copy the data to the internal buffer
-        std::copy(data + dataidx, data + dataidx + tocopy, buffer_.begin());
-
-        // update where we are in the input data
-        // (it's ok if this goes past the end, because this loop should be terminating then)
-        dataidx += tocopy;
-
-        // How much is in the buffer
-        nbuffer_ = static_cast<int>(ntodo);
-
-    } while(ntodo >= 4);
-
-    // Any remainder/tail will be left in the buffer for next time
+        std::copy(data_conv, data_conv + nbytes, buffer_.begin());
+        nbuffer_ = nbytes;
+    }
 }
 
 
@@ -154,22 +148,28 @@ HashValue MurmurHash3_32_x32::finalize(void)
 ////////////////////////////////
 // Private member functions
 ////////////////////////////////
-void MurmurHash3_32_x32::update_block_(void)
+void MurmurHash3_32_x32::update_block_(uint8_t const * data, size_t nblocks)
 {
-    // This function only does an entire 4-byte buffer
-    // (that is stored as private member buffer_)
-    uint32_t k = *(reinterpret_cast<const uint32_t *>(buffer_.data()));
+    // This function only does entire 4-byte blocks
+    // (passed in through the first parameter)
 
-    k *= c1;
-    k  = rotl32(k, 15);
-    k *= c2; 
+    const uint32_t * block32 = reinterpret_cast<const uint32_t *>(data);
 
-    h_ ^= k;
-    h_ = rotl32(h_, 13);
-    h_ = h_*5+0xe6546b64;
+    for(size_t i = 0; i < nblocks; i++)
+    {
+        uint32_t k = block32[i];
+
+        k *= c1;
+        k  = rotl32(k, 15);
+        k *= c2; 
+
+        h_ ^= k;
+        h_ = rotl32(h_, 13);
+        h_ = h_*5+0xe6546b64;
+    }
 
     // update how much we've actually hashed
-    len_ += 4;
+    len_ += 4 * nblocks;
 }
 
 
