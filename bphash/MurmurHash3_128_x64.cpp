@@ -58,24 +58,63 @@ void MurmurHash3_128_x64::update(void const * data, size_t nbytes)
     // cast to an array of bytes
     const uint8_t * data_conv = static_cast<const uint8_t*>(data);
 
-    // Are we doing this in-place (ie, without copying to a temporary butter)?
-    // This is true if we don't have leftovers stored already
-    if(nbuffer_ == 0)
-        update_inplace_(data_conv, nbytes);
-    else
-        update_via_buffer_(data_conv, nbytes);
-}
-
-
-void MurmurHash3_128_x64::pad_out(void)
-{
     if(nbuffer_ != 0)
     {
-        std::fill(buffer_.begin() + nbuffer_,
-                  buffer_.end(),
-                  0);
-        update_block_(buffer_.data());
-        nbuffer_ = 0;
+        // we have some leftover data. Add some from the
+        // new data and hash the temporary buffer
+
+        // Amount of space left in the buffer?
+        size_t nbytes_avail = bufsize_ - nbuffer_;
+    
+        // How much of data should we actually copy?
+        size_t tocopy = std::min(nbytes, nbytes_avail);
+    
+        // copy it to the end of the buffer
+        std::copy(data_conv,
+                  data_conv + tocopy,
+                  buffer_.begin() + nbuffer_);
+    
+        // how much do we have in the buffer now?
+        nbuffer_ += tocopy;
+
+        // The new number of bytes to do in data
+        // This should not underflow since
+        // tocopy = std::min(nbytes, ...)
+        nbytes -= tocopy;
+
+        // Also advance the data pointer
+        data_conv += tocopy;
+
+        // hash the buffer if it is full
+        if(nbuffer_ == bufsize_)
+        {
+            update_block_(buffer_.data());
+            nbuffer_ = 0;
+        }
+    }
+
+    // now continue hashing the data in place
+    while(nbytes >= bufsize_)
+    {
+        // Compute the hash for this block
+        update_block_(data_conv);
+
+        // Move the data pointer
+        data_conv += bufsize_;
+
+        // How many bytes are left to do?
+        // Underflow won't happen because this loop won't run
+        // with nbytes < bufsize_
+        nbytes -= bufsize_;
+    }
+
+    // Leave any remainder in the main buffer
+    // (we already know that nbytes < 16, or else
+    // the while loop would have kept going)
+    if(nbytes != 0)
+    {
+        std::copy(data_conv, data_conv + nbytes, buffer_.begin());
+        nbuffer_ = nbytes;
     }
 }
 
@@ -183,89 +222,6 @@ void MurmurHash3_128_x64::update_block_(uint8_t const * data)
     // update how much we've actually hashed
     len_ += 16;
 }
-
-
-void MurmurHash3_128_x64::update_inplace_(uint8_t const * data, size_t nbytes)
-{
-    while(nbytes >= 16)
-    {
-        // Compute the hash for this block
-        update_block_(data);
-
-        // Move the data pointer
-        data += 16;
-
-        // How many bytes are left to do?
-        // Underflow won't happen because this loop won't run
-        // with nbytes < 16
-        nbytes -= 16;
-    }
-
-    // Leave any remainder in the main buffer
-    // (we already know that nbytes < 16, or else
-    // the while loop would have kept going)
-    if(nbytes != 0)
-    {
-        std::copy(data, data + nbytes, buffer_.begin());
-        nbuffer_ = nbytes;
-    }
-}
-
-
-void MurmurHash3_128_x64::update_via_buffer_(uint8_t const * data, size_t nbytes)
-{
-    // Temporary buffer
-    // Reason: If an instance of this class is created on the heap, then
-    // buffer_ will be on the heap. This leads to a noticible slowdown
-    // on some systems
-    std::array<uint8_t, 16> tmpbuf = buffer_;
-
-    // Amount of space left in the buffer?
-    size_t nbytes_avail = 16 - nbuffer_;
-
-    // How much of data should we actually copy?
-    size_t tocopy = std::min(nbytes, nbytes_avail);
-
-    // copy it
-    std::copy(data, data + tocopy, tmpbuf.begin() + nbuffer_);
-
-    // how much do we have in the buffer now?
-    nbuffer_ += tocopy;
-
-    while(nbuffer_ == 16)
-    {
-        // Compute the hash for this block
-        update_block_(tmpbuf.data());
-
-        // tocopy represents how many we just copied to the buffer
-        // and then hashed.
-
-        // Move the data pointer
-        data += tocopy;
-
-        // How many bytes are left to do?
-        // This should not underflow since
-        // tocopy = std::min(nbytes, ...)
-        nbytes -= tocopy;
-
-        // we have the entire buffer available again
-        nbytes_avail = 16;
-
-        // how much are we going to copy now?
-        tocopy = std::min(nbytes, nbytes_avail);
-
-        // copy it to the buffer
-        std::copy(data, data + tocopy, tmpbuf.begin());
-
-        // how much is stored in the buffer is how much
-        // we copied to it
-        nbuffer_ = tocopy;
-    }
-
-    // Leave any remainder/tail in the main buffer for next time
-    buffer_ = tmpbuf;
-}
-
 
 } // close namespace detail
 } // close namespace bphash

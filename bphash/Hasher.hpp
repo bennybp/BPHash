@@ -156,7 +156,6 @@ class Hasher
             const char * typestr = typeid(T).name();
             size_t len = strlen(typestr);
             hashimpl_->update(typestr, len);
-            hashimpl_->pad_out();
 
             // and the rest
             (*this)(objs...);
@@ -233,13 +232,11 @@ class Hasher
                 // we add the data first, then the size, then pad it
                 hashimpl_->update(pw.ptr, pw.len);
                 hashimpl_->update(&pw.len, sizeof(pw.len));
-                hashimpl_->pad_out();
             }
             else
             {
                 size_t n = 0;
                 hashimpl_->update(&n, sizeof(size_t));
-                hashimpl_->pad_out();
             }
         }
 
