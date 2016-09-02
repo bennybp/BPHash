@@ -183,14 +183,35 @@ class Hasher
         }
 
 
-        /*! \brief Hash a wrapped pointer */
+        /*! \brief Hash a wrapped pointer  to a fundamental type */
         template<typename T>
-        void hash_single_(const PointerWrapper<T> & pw)
+        typename std::enable_if<std::is_fundamental<T>::value, void>::type
+        hash_single_(const PointerWrapper<T> & pw)
         {
             if(pw.ptr != nullptr)
             {
-                // we add the data first, then the size, then pad it
-                hashimpl_->update(pw.ptr, pw.len);
+                // we add the data first, then the size
+                hashimpl_->update(pw.ptr, pw.len * sizeof(T));
+                hashimpl_->update(&pw.len, sizeof(pw.len));
+            }
+            else
+            {
+                size_t n = 0;
+                hashimpl_->update(&n, sizeof(size_t));
+            }
+        }
+
+        /*! \brief Hash a wrapped pointer that does not point to a fundamental type */
+        template<typename T>
+        typename std::enable_if<!std::is_fundamental<T>::value, void>::type
+        hash_single_(const PointerWrapper<T> & pw)
+        {
+            if(pw.ptr != nullptr)
+            {
+                // we add the data first, then the size
+                for(size_t i = 0; i < pw.len; i++)
+                    hash_single_(pw.ptr[i]); 
+
                 hashimpl_->update(&pw.len, sizeof(pw.len));
             }
             else

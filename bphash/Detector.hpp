@@ -7,7 +7,23 @@
 #include "bphash/Hasher_fwd.hpp"
 
 namespace bphash {
+
+
+/*! \brief Trait class that determines if a type is hashable or not
+ *
+ * Whether or not a type is hashable can be determined via is_hashable<Type>::value
+ *
+ * This also works with multiple types. If multiple types are specified, \p value is
+ * only true if all are hashable.
+ */
+template<typename ... Targs>
+struct is_hashable;
+
+
+
+
 namespace detail {
+
 
 /*! \brief Detects if a class has a hash() member function with the
  *         appropriate signature
@@ -54,28 +70,19 @@ class detect_hash_free_function
 };
 
 
-/*! \brief Detects if a type is a PointerWrapper class */
+/*! \brief Detects if a type is a PointerWrapper class (and contains a hashable type */
 template<typename T>
-class detect_pointer_wrapper : public std::false_type { };
+struct detect_pointer_wrapper : public std::false_type { };
 
 
 template<typename T>
-class detect_pointer_wrapper<PointerWrapper<T>> : public std::true_type { };
+struct detect_pointer_wrapper<PointerWrapper<T>>
+{
+    static const bool value = is_hashable<T>::value;
+};
 
 
 } // close namespace detail
-
-
-
-/*! \brief Trait class that determines if a type is hashable or not
- *
- * Whether or not a type is hashable can be determined via is_hashable<Type>::value
- *
- * This also works with multiple types. If multiple types are specified, \p value is
- * only true if all are hashable.
- */
-template<typename ... Targs>
-struct is_hashable;
 
 
 template<typename T>
