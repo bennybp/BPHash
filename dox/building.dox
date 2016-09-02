@@ -2,7 +2,9 @@
 
 \section building_overview Overview
 
-The BPHash project is build using CMake (https://cmake.org).
+The BPHash project is configured and built
+using CMake (https://cmake.org).
+
 
 \section building_dependencies Dependencies
 
@@ -11,8 +13,82 @@ capable of compiling C++11 (in particular, variadic templates).
 
 \section building_instructions Building
 
-\section building_testing Testing
+The basic building steps are the traditional CMake steps:
 
-\section building_installing Installation
+\code{.sh}
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/path/to/install ../ 
+make
+make test
+make install
+\endcode
+
+There are a few more helpful options:
+
+`BPHASH_BUILD_SHARED` can be set to `True` to build a shared library, rather than the
+default static library.
+
+\code{.sh}
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/path/to/install \
+      -DBPHASH_BUILD_SHARED=True \
+      ../ 
+\endcode
+
+`BPHASH_EXTRA_CXX_FLAGS` can be set to compiler-specific optimization flags. For
+example, to let g++ autodetect the best optimization for the current system,
+you can use
+
+\code{.sh}
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/path/to/install \
+      -DBPHASH_EXTRA_CXX_FLAGS="-march=native" \
+      ../ 
+\endcode
+
+
+For the Intel compiler, the equivalent would be
+
+\code{.sh}
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/path/to/install \
+      -DBPHASH_EXTRA_CXX_FLAGS="-xHOST" \
+      ../ 
+\endcode
+
+
+
+\section building_testing Testing & Benchmarking
+
+Testing is done with `make test`. A quick benchmark can be run
+with the `test_benchmark` program. To do so, run the following command from the
+top-level build directory:
+
+\code{.sh}
+test/test_benchmark 1048576
+\endcode 
+
+The only argument is the size of the data set to benchmark with (in bytes).
+
+
+\section building_installing Installation & Including in Other Projects
+
+`make install` will install the headers and library. It will also install a CMake configuration
+file that can be used to include BPHash in other projects. This creates a CMake interface
+target that can be used with `target_link_libraries`. The top-level install path
+(what was passed to `CMAKE_INSTALL_PREFIX`) must be in your `CMAKE_PREFIX_PATH` (or
+be one of the system defaults).
+
+\code{.unparsed}
+
+# Make sure that the top-level install path is in the CMAKE_PREFIX_PATH
+find_package(bphash)  
+
+# Later, link to it. This will also pull in header paths
+target_link_libraries(myproject bphash).
+\endcode
+
+Note that your project must be built with (at least) C++11 support.
 
 */
