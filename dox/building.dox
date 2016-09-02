@@ -8,8 +8,9 @@ using CMake (https://cmake.org).
 
 \section building_dependencies Dependencies
 
-The only dependency is a C++ compiler (and standard libraries)
-capable of compiling C++11 (in particular, variadic templates).
+The only dependencies are a C++ compiler (and standard libraries)
+capable of compiling C++11 (in particular, variadic templates)
+and CMake (v3.0.2 or above).
 
 \section building_instructions Building
 

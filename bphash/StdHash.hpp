@@ -18,6 +18,12 @@ struct StdHash
 {
     size_t operator()(const T & obj) const
     {
+        static_assert(is_hashable<T>::value,
+         "\n\n"
+         "  ***  Object is not hashable. Did you remember to include the correct header       ***\n"
+         "  ***  (such as <bphash/types/string.hpp>) or to declare a hash member function or  ***\n"
+         "  ***  free function?                                                               ***\n");
+
         auto h = make_hash(HashType::Hash64, obj);
         return convert_hash<size_t>(h);
     }

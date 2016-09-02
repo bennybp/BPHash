@@ -1,5 +1,415 @@
 /*! \page using_page Using BPHash
 
-using stuff
+\section usage_hashtypes Types of Hashes
+
+BPHash has a few different types of hashes. See the
+documentation of bphash::HashType for the different types.
+
+
+\section usage_basic Basic Hashing
+
+The easiest way to obtain the hash of an object would
+be to use the make_hash() function.
+
+\code{.cpp}
+#include <bphash/Hasher.hpp>
+
+using namespace bphash;
+
+int main(void)
+{
+    int i = 1921;;
+    double f = 1.234;
+
+    HashValue hv1 = make_hash(HashType::Hash128, i);
+    HashValue hv2 = make_hash(HashType::Hash128, f);
+    HashValue hv3 = make_hash(HashType::Hash128, i, f);
+}
+
+\endcode
+
+A bphash::HashValue object can be converted to its string representation with the
+hash_to_string() function.
+
+
+\code{.cpp}
+std::string hv1_str = hash_to_string(hv1);
+std::cout << "Hash as a string: " << hv1_str << "\n";
+\endcode
+
+Hashes can also be truncated or converted to a C++ integral type. Truncating to a
+size that is greater than the current hash size results in a hash that is padded with
+zero.
+
+\code{.cpp}
+HashValue hv1_trunc = truncate_hash(hv1, 8);      // truncate to 8 bytes
+size_t hv_int = convert_hash<size_t>(hv1_trunc);  // or convert to a size_t
+size_t hv_int2 = convert_hash<size_t>(hv1);       // will truncate and then convert
+
+HashValue hv2_trunc = truncate_hash(hv2, 24);     // "truncate" to 24 bytes (will pad with zero)
+\endcode
+
+
+\subsection usage_hasher Using a Hasher Object
+
+If needed, a bphash::Hasher object could be used instead of the make_hash() convenience function. This function uses the same format
+as when passing data to the make_hash() function (ie, some pointers
+must be wrapped etc. See later sections).
+
+\code{.cpp}
+
+#include <iostream>
+#include <bphash/Hasher.hpp>
+
+using namespace bphash;
+
+int main(void)
+{
+
+    int i = 10;
+    float f = 1.982;
+
+    Hasher h(HashType::Hash128);
+    h(i, f);
+    HashValue hv = h.finalize();
+
+    // equivalent to
+    Hasher h2(HashType::Hash128);
+    h2(i);
+    h2(f);
+    HashValue hv2 = h2.finalize();
+
+    // equivalent to
+    HashValue hv3 = make_hash(HashType::Hash128, i, f);
+
+    return 0;
+}
+\endcode
+
+
+
+\section usage_enum Enumeration Support
+
+Enumerations are supported as well
+
+\code{.cpp}
+#include <iostream>
+#include <bphash/Hasher.hpp>
+
+using namespace bphash;
+
+enum MyEnum
+{
+    Value1,
+    Value2,
+    Value3
+};
+
+enum class MyEnumClass
+{
+    Value1,
+    Value2,
+    Value3
+};
+
+
+int main(void)
+{
+    MyEnum me1 = MyEnum::Value1;
+    MyEnumClass mec1 = MyEnumClass::Value1;
+
+    HashValue hv = make_hash(HashType::Hash128, me1, mec1);
+
+    return 0;
+}
+\endcode
+
+
+
+
+\section usage_stl STL Support
+
+BPHash supports STL containers. To support hashing of a container, include the appropriate
+header from `bphash/types` (which mirrors the include file from the STL).
+
+\code{.cpp}
+#include <iostream>
+#include <bphash/Hasher.hpp>
+#include <bphash/types/memory.hpp>  // unique_ptr
+#include <bphash/types/vector.hpp>  // vector
+#include <bphash/types/utility.hpp> // pair
+
+using namespace bphash;
+
+
+int main(void)
+{
+    std::vector<double> dvec{1.0, 2.0, 3.0, 4.0};
+    std::unique_ptr<std::pair<int, int>> pair_ptr(new std::pair<int, int>{10, 999});
+
+    HashValue hv = make_hash(HashType::Hash128, dvec, pair_ptr);
+
+    pair_ptr->first = 11;
+    hv = make_hash(HashType::Hash128, dvec, pair_ptr);
+}
+\endcode
+
+
+\section usage_point Arrays and Pointers
+
+Arrays and pointers can be hashed also. If the pointer points to only one element,
+it can simply be hashed as-is. If it points to multiple elements, or is an array type
+(ie, `int[]`) it must be wrapped in a helper structure via the hash_pointer() function.
+
+C-style strings are hashed as strings, with the length determined via `strlen`.
+
+\code{.cpp}
+#include <iostream>
+#include <vector>
+#include <bphash/Hasher.hpp>
+#include <bphash/types/vector.hpp>
+
+using namespace bphash;
+
+int main(void)
+{
+    const char * s = "This is a cstring";
+    HashValue hv = make_hash(HashType::Hash128, s);
+
+    const char * s2 = "This is a cstring";
+
+    const int i_arr[] = {0, 1, 2, 4};
+    int i = 123;
+    int * i_ptr = &i;
+
+    // This is ok - will assume length of one
+    hv = make_hash(HashType::Hash128, i_ptr);
+
+    // Generally equivalent to the above, although hashes will
+    // not be identical
+    hv = make_hash(HashType::Hash128, hash_pointer(i_ptr, 1));
+
+    // Won't work - need pointer wrapper
+    //hv = make_hash(HashType::Hash128, i_arr);
+
+    hv = make_hash(HashType::Hash128, hash_pointer(i_arr, 4));
+
+    // pointers to non-fundamental types are ok too
+    std::vector<double> v_arr[] = { {1.0, 2.0, 3.0}, {4.0, 5.0, 6.0, 7.1} };
+    hv = make_hash(HashType::Hash128, hash_pointer(v_arr, 2));
+}
+\endcode
+
+
+
+\section usage_custom Hashing Custom Classes
+
+BPHash can be extended to custom classes as well. This can be done via
+a class member function or via a free function.
+
+\subsection usage_custom_intrusive Intrusive Hash Function
+
+A hash function can be added to the class to make it hashable.
+The signature is `void hash(bphash::Hasher & h) const`. It must
+be a `const` function. Note that The bphash::Hasher function is
+declared in the `bphash/Hasher_fwd.hpp` header file so that is
+all that is needed to declare this function. The full
+`bphash/Hasher.hpp` header is needed when defining the function.
+
+\code{.cpp}
+// Header file Classes.hpp
+
+#include <bphash/Hasher_fwd.hpp>
+
+class Class1
+{
+    public:
+        Class1(long i, double d);
+
+        void hash(bphash::Hasher & h) const;
+
+    private:
+        long i;
+        double d;
+};
+
+
+
+// Source file
+#include <iostream>
+#include <bphash/Hasher.hpp>
+
+#include "Classes.hpp"
+
+using namespace bphash;
+
+Class1::Class1(long i, double d)
+    : i(i), d(d) { }
+
+
+void Class1::hash(Hasher & h) const
+{
+    h(d, i);
+}
+
+
+int main(void)
+{
+    Class1 c(10, 3.1415);
+    HashValue hv = make_hash(HashType::Hash128, c);
+    std::cout << "Hash: " << hash_to_string(hv) << "\n";
+}
+
+\endcode
+
+
+The hash function can be made `private` if desired. If so, you
+must use the `BPHASH_DECLARE_HASHING_FRIENDS` macro inside the class.
+
+
+\code{.cpp}
+class Class2
+{
+    public:
+        Class2(long i, double d);
+
+
+    private:
+        BPHASH_DECLARE_HASHING_FRIENDS
+
+        long i;
+        double d;
+
+
+        void hash(bphash::Hasher & h) const;
+};
+\endcode
+
+
+
+\subsection using_freefunc Using a Free Function
+
+
+A free function with the form `void hash_object(const ObjectType &, bphash::Hasher &)`
+can also be used instead of the member functions.
+
+
+
+\code{.cpp}
+// Header file Classes.hpp
+
+class Class3
+{
+    public:
+        Class3(long i, double d);
+
+        long get_i(void) const { return i; }
+        double get_d(void) const { return d; }
+
+    private:
+        long i;
+        double d;
+};
+
+
+
+// Source file
+#include <iostream>
+#include <bphash/Hasher.hpp>
+
+#include "Classes.hpp"
+
+void hash_object(const Class3 & cls, Hasher & h)
+{
+    h(cls.get_i(), cls.get_d());
+}
+
+
+int main(void)
+{
+    Class3 c3(28, 9.8765);
+    HashValue hv3 = make_hash(HashType::Hash128, c3);
+    std::cout << "Hash: " << hash_to_string(hv3) << "\n";
+    return 0;
+}
+
+\endcode
+
+
+\subsection usage_inheritence Inheritence Considerations
+
+It's up to you how to handle inheritence (in particular, how to handle
+hashing through a base class via virtual functions).  One idea would
+be to have each class have its own hashing function similar to the
+`hash()` member function but with a different name (say, `hash_()`).
+Then each class is responsible for hashing its own data and then calling
+the custom `hash_()` function of its base class. Then, either the original
+`hash()` function could call a virtual `hash_()` function, or the `hash()`
+function itself is virtual and calls the `hash_()` function of its own
+class, starting the chain.
+
+
+
+
+\section usage_compiletime Compile Time Checking
+
+Hashing ability can be detected at compile time with
+the `bphash::is_hashable` trait class.
+
+\code{.cpp}
+
+int main(void)
+{
+    std::cout << bphash::is_hashable<int>::value << "\n";
+    std::cout << bphash::is_hashable<const int *>::value << "\n";
+
+    // not hashable on its own - would need a pointer wrapper
+    std::cout << bphash::is_hashable<const double []>::value << "\n";
+
+    // will only be hashable if bphash/types/utility.hpp is included!
+    std::cout << bphash::is_hashable<std::pair<long, float>>::value << "\n";
+}
+
+\endcode
+
+
+\section usage_stdhash Using as a std::hash replacement
+
+BPHash includes an equivalent of `std::hash` for use in some containers.
+This is included in the `bphash/StdHash.hpp` header.
+
+\code{.cpp>
+
+#include <iostream>
+#include <utility>
+#include <unordered_map>
+#include <unordered_set>
+
+#include <bphash/Hasher.hpp>
+#include <bphash/StdHash.hpp>
+#include <bphash/types/utility.hpp>
+
+using namespace bphash;
+
+
+int main(void)
+{
+    typedef std::pair<int, int> KeyType;
+
+    std::unordered_set<KeyType, bphash::StdHash<KeyType>> myset;
+    std::unordered_map<KeyType, std::string, bphash::StdHash<KeyType>> mymap;
+
+    myset.insert({1,2});
+    myset.insert({3,4});
+    mymap[{7,8}] = "This is a string";
+
+    return 0;
+}
+
+\endcode
+
+
+
+
 
 */
