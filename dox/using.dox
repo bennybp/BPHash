@@ -1,5 +1,7 @@
 /*! \page using_page Using BPHash
 
+\tableofcontents
+
 \section usage_hashtypes Types of Hashes
 
 BPHash has a few different types of hashes. See the
@@ -378,7 +380,7 @@ int main(void)
 BPHash includes an equivalent of `std::hash` for use in some containers.
 This is included in the `bphash/StdHash.hpp` header.
 
-\code{.cpp>
+\code{.cpp}
 
 #include <iostream>
 #include <utility>

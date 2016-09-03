@@ -2,6 +2,11 @@
  * \brief Trait classes for detecting if something is hashable
  */
 
+/* Copyright (c) 2016 Benjamin Pritchard <ben@bennyp.org>
+ * This file is part of the BPHash project, which is released
+ * under the BSD 3-clause license. See the LICENSE file for details
+ */
+
 #pragma once
 
 #include "bphash/Hasher_fwd.hpp"

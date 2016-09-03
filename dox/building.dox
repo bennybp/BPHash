@@ -1,5 +1,7 @@
 /*! \page building_page Building and Testing
 
+\tableofcontents
+
 \section building_overview Overview
 
 The BPHash project is configured and built

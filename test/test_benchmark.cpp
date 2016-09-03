@@ -1,7 +1,11 @@
 /*! \file
- * \brief Testing of core hashing algorithms
+ * \brief Benchmarking of hashing algorithms
  */
 
+/* Copyright (c) 2016 Benjamin Pritchard <ben@bennyp.org>
+ * This file is part of the BPHash project, which is released
+ * under the BSD 3-clause license. See the LICENSE file for details
+ */
 
 /* This file tests the core MurmurHash algorithms against
  * the reference implementations in smhasher */
