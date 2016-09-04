@@ -14,19 +14,7 @@ using namespace bphash;
 void test_string(HashType htype,
                  std::vector<HashValue> & all_hashes)
 {
-    std::vector<const char *> str_test{"",
-                                       " ",
-                                       "\n",
-                                       "String1",
-                                       "String 1",
-                                       "string1",
-                                       "string 1",
-                                       "STRING1",
-                                       " String1",
-                                       "String1!",
-                                       "String1!\n"};
-
-    test_all<const char *>(str_test, htype, all_hashes);
-    test_all<std::string>(str_test, htype, all_hashes);
+    test_fundamental<const char *>(str_test, htype, all_hashes);
+    test_fundamental<std::string>(str_test, htype, all_hashes);
 }
 

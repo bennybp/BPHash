@@ -14,24 +14,7 @@ using namespace bphash;
 void test_floating(HashType htype,
                    std::vector<HashValue> & all_hashes)
 {
-    // integer values to test
-    // This contains negative integers, and we purposely pass them
-    // as unsigned sometimes.
-    // Unsigned overflow is defined behavior
-    std::vector<double> dbl_test{0,  1.0,  1.000001,  1.12e12,  1.12001e12,  1.12001e-12
-                                    -1.0, -1.000001, -1.12e12, -1.12001e12, -1.12001e-12};
-
-    // create tests for complex values that are just combinations
-    // of the vector above
-    std::vector<std::complex<double>> cmplx_test;
-    for(auto i : dbl_test)
-    for(auto j : dbl_test)
-        cmplx_test.push_back({i,j});
-
-    test_all<float  >(dbl_test, htype, all_hashes);
-    test_all<double >(dbl_test, htype, all_hashes);
-
-    test_all<std::complex<float >>(cmplx_test, htype, all_hashes);
-    test_all<std::complex<double>>(cmplx_test, htype, all_hashes);
+    test_fundamental<float  >(dbl_test, htype, all_hashes);
+    test_fundamental<double >(dbl_test, htype, all_hashes);
 }
 
