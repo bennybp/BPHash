@@ -29,13 +29,15 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 endif()
 
 
-#add_executable(test_test test_integers.cpp
-#                         test.cpp
-#              )
-#
-#target_include_directories(test_test PRIVATE ${CMAKE_SOURCE_DIR})
-#target_compile_options(test_test PRIVATE ${BPHASH_TEST_CXX_FLAGS} ${BPHASH_EXTRA_CXX_FLAGS})
-#target_link_libraries(test_test PRIVATE bphash)
+add_executable(test_unique test_integers.cpp
+                           test_floating.cpp
+                           test_string.cpp
+                           test_unique.cpp
+              )
+
+target_include_directories(test_unique PRIVATE ${CMAKE_SOURCE_DIR})
+target_compile_options(test_unique PRIVATE ${BPHASH_TEST_CXX_FLAGS} ${BPHASH_EXTRA_CXX_FLAGS})
+target_link_libraries(test_unique PRIVATE bphash)
 
 
 add_executable(test_reference test_reference.cpp MurmurHash3_reference.cpp)
