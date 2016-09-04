@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::forward_list */
 template<typename T, typename Alloc>
-void hash_object( const std::forward_list<T, Alloc> & a, Hasher & h)
+typename std::enable_if<is_hashable<T>::value, void>::type
+hash_object( const std::forward_list<T, Alloc> & a, Hasher & h)
 {
     detail::hash_container_object(a, h);
 }

@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::complex */
 template<typename T>
-void hash_object( const std::complex<T> & a, Hasher & h)
+typename std::enable_if<is_hashable<T>::value, void>::type
+hash_object( const std::complex<T> & a, Hasher & h)
 {
     h(a.real(), a.imag());
 }

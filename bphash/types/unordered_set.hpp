@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::unordered_set */
 template<typename Key, typename HashT, typename Pred, typename Alloc>
-void hash_object( const std::unordered_set<Key, HashT, Pred, Alloc> & s, Hasher & h)
+typename std::enable_if<is_hashable<Key>::value, void>::type
+hash_object( const std::unordered_set<Key, HashT, Pred, Alloc> & s, Hasher & h)
 {
     detail::hash_container_object(s, h);
 }

@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::set */
 template<typename Key, typename Compare, typename Alloc>
-void hash_object( const std::set<Key, Compare, Alloc> & s, Hasher & h)
+typename std::enable_if<is_hashable<Key>::value, void>::type
+hash_object( const std::set<Key, Compare, Alloc> & s, Hasher & h)
 {
     detail::hash_container_object(s, h);
 }

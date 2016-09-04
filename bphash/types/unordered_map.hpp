@@ -17,7 +17,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::unordered_map */
 template<typename Key, typename T, typename HashT, typename Pred, typename Alloc>
-void hash_object( const std::unordered_map<Key, T, HashT, Pred, Alloc> & m, Hasher & h)
+typename std::enable_if<is_hashable<Key, T>::value, void>::type
+hash_object( const std::unordered_map<Key, T, HashT, Pred, Alloc> & m, Hasher & h)
 {
     detail::hash_container_object(m, h);
 }

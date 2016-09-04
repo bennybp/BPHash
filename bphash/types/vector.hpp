@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::vector */
 template<typename T, typename Alloc>
-void hash_object( const std::vector<T, Alloc> & v, Hasher & h)
+typename std::enable_if<is_hashable<T>::value, void>::type
+hash_object( const std::vector<T, Alloc> & v, Hasher & h)
 {
     h(hash_pointer(v.data(), v.size()));
 }

@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::array */
 template<typename T, size_t N>
-void hash_object( const std::array<T, N> & a, Hasher & h)
+typename std::enable_if<is_hashable<T>::value, void>::type
+hash_object( const std::array<T, N> & a, Hasher & h)
 {
     h(hash_pointer(a.data(), N));
 }

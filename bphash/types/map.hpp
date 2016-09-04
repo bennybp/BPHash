@@ -17,7 +17,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::map */
 template<typename Key, typename T, typename Compare, typename Alloc>
-void hash_object( const std::map<Key, T, Compare, Alloc> & m, Hasher & h)
+typename std::enable_if<is_hashable<Key, T>::value, void>::type
+hash_object( const std::map<Key, T, Compare, Alloc> & m, Hasher & h)
 {
     detail::hash_container_object(m, h);
 }

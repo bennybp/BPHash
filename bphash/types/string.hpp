@@ -16,7 +16,8 @@ namespace bphash {
 
 /*! \brief Hashing of std::string */
 template<typename charT, typename Traits, typename Alloc>
-void hash_object( const std::basic_string<charT, Traits, Alloc> & s, Hasher & h)
+typename std::enable_if<is_hashable<charT>::value, void>::type
+hash_object( const std::basic_string<charT, Traits, Alloc> & s, Hasher & h)
 {
     detail::hash_container_object(s, h);
 }
