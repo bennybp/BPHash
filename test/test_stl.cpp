@@ -29,6 +29,8 @@ int main(void)
     us.emplace(key_type{5, 10.5});
     us.emplace(key_type{5, 10.5});
 
+    //! \todo Don't forget to test vector<bool>
+
     std::cout << "\n";
     std::cout << "Elements in unordered set: " << us.size() << "\n";
     for(const auto & it : us)
