@@ -44,7 +44,7 @@ class HashFree
         std::string s;
 };
 
-void hash_object(const HashFree & hf, Hasher & h)
+static void hash_object(const HashFree & hf, Hasher & h)
 {
     h(hf.i, hf.s);
 }
@@ -62,12 +62,12 @@ class HashFree_BadSig5 { };
 // Some of the following fail, since the free-function detector is a little
 // more lax in checking some types
 /////////////////////////////////////////////////////////////////////////////
-void hash_object(HashFree_BadSig0 &, Hasher &) { }
-//void hash_object(const HashFree_BadSig1 &, const Hasher &) { }
-void hash_object(const HashFree_BadSig2 &, Hasher) { }
-void hash_object(const HashFree_BadSig3 &, Hasher &&) { }
-void hash_object(const HashFree_BadSig4 &, int) { }
-//int hash_object(const HashFree_BadSig5 &, Hasher &) { }
+//static void hash_object(HashFree_BadSig0 &, Hasher &) { }
+//static void hash_object(const HashFree_BadSig1 &, const Hasher &) { }
+//static void hash_object(const HashFree_BadSig2 &, Hasher) { }
+//static void hash_object(const HashFree_BadSig3 &, Hasher &&) { }
+//static void hash_object(const HashFree_BadSig4 &, int) { }
+//static int hash_object(const HashFree_BadSig5 &, Hasher &) { }
 
 
 

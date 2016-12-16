@@ -27,7 +27,7 @@ using namespace bphash;
 using namespace std::chrono;
 
 
-void random_fill(std::vector<uint8_t> & buffer)
+static void random_fill(std::vector<uint8_t> & buffer)
 {
     auto seed = system_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);

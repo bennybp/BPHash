@@ -29,7 +29,7 @@
 using namespace bphash;
 
 
-void random_fill(std::vector<uint8_t> & buffer)
+static void random_fill(std::vector<uint8_t> & buffer)
 {
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);
@@ -40,11 +40,11 @@ void random_fill(std::vector<uint8_t> & buffer)
 }
 
 
-void test_offset(detail::HashImpl & hasher,
-                 const std::vector<uint8_t> & testdata,
-                 size_t offset, size_t blocksize,
-                 const HashValue & reference,
-                 int hashsize, int bitness)
+static void test_offset(detail::HashImpl & hasher,
+                        const std::vector<uint8_t> & testdata,
+                        size_t offset, size_t blocksize,
+                        const HashValue & reference,
+                        int hashsize, int bitness)
 {
     std::cout << "Testing " << hashsize << "-bit x" << bitness << " hash,"
               << " offset " << offset

@@ -13,6 +13,14 @@
 
 #include "MurmurHash3_reference.h"
 
+#if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wsign-conversion"
+    #pragma clang diagnostic ignored "-Wcast-align"
+#endif
+
+
 //-----------------------------------------------------------------------------
 // Platform-specific functions and macros
 
