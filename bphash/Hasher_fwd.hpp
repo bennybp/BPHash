@@ -30,7 +30,7 @@ template <typename T> class detect_hash_member;
  */
 #define BPHASH_DECLARE_HASHING_FRIENDS \
     friend class bphash::Hasher;\
-    template<typename T> friend class bphash::detail::detect_hash_member;
+    template<typename T__> friend class bphash::detail::detect_hash_member;
 
 
 
