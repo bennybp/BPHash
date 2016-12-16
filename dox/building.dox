@@ -48,14 +48,14 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       ../ 
 \endcode
 
-`BPHASH_EXTRA_CXX_FLAGS` can be set to compiler-specific optimization flags. For
+`CMAKE_CXX_FLAGS` can be set to compiler-specific optimization flags. For
 example, to let g++ autodetect the best optimization for the current system,
 you can use
 
 \code{.sh}
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=/path/to/install \
-      -DBPHASH_EXTRA_CXX_FLAGS="-march=native" \
+      -DCMAKE_CXX_FLAGS="-march=native" \
       ../ 
 \endcode
 
@@ -65,7 +65,7 @@ For the Intel compiler, the equivalent would be
 \code{.sh}
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=/path/to/install \
-      -DBPHASH_EXTRA_CXX_FLAGS="-xHOST" \
+      -DCMAKE_CXX_FLAGS="-xHOST" \
       ../ 
 \endcode
 

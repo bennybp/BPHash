@@ -11,12 +11,6 @@ add_library(bphash ${BPHASH_BUILD_TYPE}
 # Include the main source directory (my parent) as an include directory
 target_include_directories(bphash PRIVATE ${CMAKE_SOURCE_DIR})
 
-# Add the extra flags to the actual build flags
-list(APPEND BPHASH_CXX_FLAGS ${BPHASH_EXTRA_CXX_FLAGS})
-
-target_compile_options(bphash PRIVATE ${BPHASH_CXX_FLAGS})
-
-
 # Where to install the library
 install(TARGETS bphash
         LIBRARY DESTINATION lib

@@ -8,13 +8,12 @@ enable_testing()
 # By default, use C++14 compilation
 set(CMAKE_CXX_EXTENSIONS False CACHE BOOL "Enable/Disable compiler-specific C++ extensions")
 set(CMAKE_CXX_STANDARD 14 CACHE STRING "Which C++ standard to use")
-set(BPHASH_EXTRA_CXX_FLAGS "" CACHE BOOL "Additional compilations flags for the BPHash library (semicolon-separated)")
 set(BPHASH_BUILD_SHARED FALSE CACHE BOOL "Build a shared library, rather than a static library")
 
 # CMake doesn't support Intel CXX standard until cmake 3.6
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
   if("${CMAKE_VERSION}" VERSION_LESS "3.6")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
+      add_compile_options(-std=c++${CMAKE_CXX_STANDARD})
   endif()
 endif()
 
@@ -28,27 +27,27 @@ endif()
 
 # Set the compile options
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
-    list(APPEND BPHASH_CXX_FLAGS "-w3")
+    add_compile_options(-w3)
 
     #   383  : value copied to temporary, reference to temporary used
     #   981  : operands are evaluated in unspecified order
     #  1418  : external function definition with no prior declaration
-    list(APPEND BPHASH_CXX_FLAGS "-wd383")
-    list(APPEND BPHASH_CXX_FLAGS "-wd981")
-    list(APPEND BPHASH_CXX_FLAGS "-wd1418")
+    add_compile_options(-wd383)
+    add_compile_options(-wd981)
+    add_compile_options(-wd1418)
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-    list(APPEND BPHASH_CXX_FLAGS "-Wall;-Wextra;-pedantic")
+    add_compile_options(-Wall;-Wextra;-pedantic)
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-    list(APPEND BPHASH_CXX_FLAGS "-Wall;-Wextra;-pedantic")
+    add_compile_options(-Wall;-Wextra;-pedantic)
 
     # for heavy-duty testing
-    list(APPEND BPHASH_CXX_FLAGS "-Weverything")
-    list(APPEND BPHASH_CXX_FLAGS "-Wno-c++98-compat")
-    list(APPEND BPHASH_CXX_FLAGS "-Wno-c++98-compat-pedantic")
-    list(APPEND BPHASH_CXX_FLAGS "-Wno-implicit-fallthrough")
-    list(APPEND BPHASH_CXX_FLAGS "-Wno-padded")
-    list(APPEND BPHASH_CXX_FLAGS "-Wno-weak-vtables")
-    list(APPEND BPHASH_CXX_FLAGS "-Wno-covered-switch-default")
+    add_compile_options(-Weverything)
+    add_compile_options(-Wno-c++98-compat)
+    add_compile_options(-Wno-c++98-compat-pedantic)
+    add_compile_options(-Wno-implicit-fallthrough)
+    add_compile_options(-Wno-padded)
+    add_compile_options(-Wno-weak-vtables)
+    add_compile_options(-Wno-covered-switch-default)
 endif()
 
 # The main subdirectory with the bphash library
