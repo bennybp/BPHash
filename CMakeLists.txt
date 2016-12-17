@@ -9,6 +9,7 @@ enable_testing()
 set(CMAKE_CXX_EXTENSIONS False CACHE BOOL "Enable/Disable compiler-specific C++ extensions")
 set(CMAKE_CXX_STANDARD 14 CACHE STRING "Which C++ standard to use")
 set(BPHASH_BUILD_SHARED FALSE CACHE BOOL "Build a shared library, rather than a static library")
+set(BPHASH_BUILD_PIC FALSE CACHE BOOL "Build the static library with PIC enabled")
 
 # CMake doesn't support Intel CXX standard until cmake 3.6
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
