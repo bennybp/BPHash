@@ -60,4 +60,4 @@ add_subdirectory(test)
 
 # Create and install the config file
 configure_file("bphashConfig.cmake.in" "bphashConfig.cmake" @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/bphashConfig.cmake DESTINATION lib/cmake/bphash) 
+install(FILES ${CMAKE_BINARY_DIR}/bphashConfig.cmake DESTINATION share/cmake/bphash) 
