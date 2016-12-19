@@ -1,6 +1,5 @@
 # This is the main library
-add_library(bphash ${BPHASH_BUILD_TYPE}
-                   Hasher.cpp
+add_library(bphash Hasher.cpp
                    Hash.cpp
                    MurmurHash3_128_x64.cpp
                    MurmurHash3_64_x64.cpp
@@ -10,12 +9,6 @@ add_library(bphash ${BPHASH_BUILD_TYPE}
 
 # Include the main source directory (my parent) as an include directory
 target_include_directories(bphash PRIVATE ${CMAKE_SOURCE_DIR})
-
-# Enable position-independent code?
-# Should be safe to enable for shared as well
-if(BPHASH_BUILD_PIC)
-    set_property(TARGET bphash PROPERTY POSITION_INDEPENDENT_CODE True)
-endif()
 
 # Where to install the library
 install(TARGETS bphash

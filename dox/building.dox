@@ -29,13 +29,13 @@ make install
 
 There are a few more helpful options:
 
-`BPHASH_BUILD_SHARED` can be set to `True` to build a shared library, rather than the
+`BUILD_SHARED_LIBS` can be set to `True` to build a shared library, rather than the
 default static library.
 
 \code{.sh}
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=/path/to/install \
-      -DBPHASH_BUILD_SHARED=True \
+      -DBUILD_SHARED_LIBS=True \
       ../ 
 \endcode
 

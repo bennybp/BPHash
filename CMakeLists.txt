@@ -8,21 +8,12 @@ enable_testing()
 # By default, use C++14 compilation
 set(CMAKE_CXX_EXTENSIONS False CACHE BOOL "Enable/Disable compiler-specific C++ extensions")
 set(CMAKE_CXX_STANDARD 14 CACHE STRING "Which C++ standard to use")
-set(BPHASH_BUILD_SHARED FALSE CACHE BOOL "Build a shared library, rather than a static library")
-set(BPHASH_BUILD_PIC FALSE CACHE BOOL "Build the static library with PIC enabled")
 
 # CMake doesn't support Intel CXX standard until cmake 3.6
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
   if("${CMAKE_VERSION}" VERSION_LESS "3.6")
       add_compile_options(-std=c++${CMAKE_CXX_STANDARD})
   endif()
-endif()
-
-
-# Set up the library type. This variable is passed to add_library
-set(BPHASH_BUILD_TYPE "STATIC")
-if(BPHASH_BUILD_SHARED)
-  set(BPHASH_BUILD_TYPE "SHARED")
 endif()
 
 
