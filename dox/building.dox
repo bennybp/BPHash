@@ -39,15 +39,6 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       ../ 
 \endcode
 
-By default, BPHash is built with C++14. This can be controlled with the `CMAKE_CXX_STANDARD` option. For
-example, to build with only C++11
-
-\code{.sh}
-cmake -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_CXX_STANDARD=11 \
-      ../ 
-\endcode
-
 `CMAKE_CXX_FLAGS` can be set to compiler-specific optimization flags. For
 example, to let g++ autodetect the best optimization for the current system,
 you can use

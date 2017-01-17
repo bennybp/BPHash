@@ -1,13 +1,8 @@
 cmake_minimum_required(VERSION 3.1.3)
 project(BPHash CXX)
 
-# Enable testing?
-enable_testing()
-
-# Options to set
-# By default, use C++14 compilation
-set(CMAKE_CXX_EXTENSIONS False CACHE BOOL "Enable/Disable compiler-specific C++ extensions")
-set(CMAKE_CXX_STANDARD 14 CACHE STRING "Which C++ standard to use")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_EXTENSIONS False)
 
 # CMake doesn't support Intel CXX standard until cmake 3.6
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
@@ -16,6 +11,8 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
   endif()
 endif()
 
+# Enable testing?
+enable_testing()
 
 # Set the compile options
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
