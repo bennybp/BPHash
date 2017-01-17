@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1.3)
 project(BPHash CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS False)
 
 # CMake doesn't support Intel CXX standard until cmake 3.6
