@@ -6,12 +6,14 @@ set(bphash_INCLUDE_DIRS ${bphash_INCLUDE_DIR})
 
 # Location of libraries
 if(@BUILD_SHARED_LIBS@)
-    set(bphash_LIBRARY "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@/libbphash${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(bphash_LIBNAME "${CMAKE_SHARED_LIBRARY_PREFIX}bphash${CMAKE_SHARED_LIBRARY_SUFFIX}")
     set(bphash_shared_FOUND 1)
 else()
-    set(bphash_LIBRARY "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@/libbphash${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(bphash_LIBNAME "${CMAKE_STATIC_LIBRARY_PREFIX}bphash${CMAKE_SHARED_LIBRARY_SUFFIX}")
     set(bphash_static_FOUND 1)
 endif()
+
+set(bphash_LIBRARY "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@/${bphash_LIBNAME}")
 set(bphash_LIBRARIES ${bphash_LIBRARY})
 
 check_required_components(bphash)
