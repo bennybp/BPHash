@@ -1,12 +1,5 @@
 @PACKAGE_INIT@
 
-set(PN bphash)
-
-set (_valid_components
-    static
-    shared
-)
-
 # Location of includes
 set(bphash_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
 set(bphash_INCLUDE_DIRS ${bphash_INCLUDE_DIR})
