@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classbphash_1_1detail_1_1_hash_impl.html" title="Base class for a hash implementation. " alt="" coords="5,78,172,105"/>
+<area shape="rect" id="node2" href="$classbphash_1_1detail_1_1_murmur_hash3__128__x64.html" title="Implementation of MurmurHash3 128&#45;bit x64 hash. " alt="" coords="220,37,413,79"/>
+<area shape="rect" id="node5" href="$classbphash_1_1detail_1_1_murmur_hash3__32__x32.html" title="Implementation of MurmurHash3 32&#45;bit x32 hash. " alt="" coords="220,103,413,144"/>
+<area shape="rect" id="node3" href="$classbphash_1_1detail_1_1_murmur_hash3__32__x64.html" title="Implementation of MurmurHash3 32&#45;bit x64 hash. " alt="" coords="461,5,655,47"/>
+<area shape="rect" id="node4" href="$classbphash_1_1detail_1_1_murmur_hash3__64__x64.html" title="Implementation of MurmurHash3 64&#45;bit x64 hash. " alt="" coords="461,71,655,112"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="bphash::StdHash::operator()" name="bphash::StdHash::operator()">
+<area shape="rect" id="node2" href="$namespacebphash.html#a2a8a965caf0ab54bed55d26fa44bbce4" title="Convenience function for hashing objects in a single function call. " alt="" coords="240,31,379,57"/>
+<area shape="rect" id="node3" href="$classbphash_1_1_hasher.html#a28731ad3dcc5fd1728b538b77e03db78" title="Perform any remaining steps and return the hash. " alt="" coords="427,31,589,57"/>
+<area shape="rect" id="node4" href="$namespacebphash.html#ac7793bd7f4610aa435caf97068a3e75a" title="Hashing of std::array. " alt="" coords="637,5,780,32"/>
+<area shape="rect" id="node5" href="$namespacebphash.html#a426851c345d47bdddc74ba30568d1134" title="Wrap a raw pointer so that it can be hashed. " alt="" coords="828,31,975,57"/>
+</map>

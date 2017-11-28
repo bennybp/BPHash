@@ -1,0 +1,22 @@
+<map id="test_helpers.hpp" name="test_helpers.hpp">
+<area shape="rect" id="node2" href="$_hasher_8hpp.html" title="A class that hashes objects (header) " alt="" coords="1473,319,1608,345"/>
+<area shape="rect" id="node13" href="$_all_8hpp.html" title="A convenience header that includes all the types supported by bphash. " alt="" coords="1050,80,1194,107"/>
+<area shape="rect" id="node3" href="$_hash_impl_8hpp.html" title="Base class for a hash implementation. " alt="" coords="1231,393,1381,420"/>
+<area shape="rect" id="node8" href="$_detector_8hpp.html" title="Trait classes for detecting if something is hashable. " alt="" coords="1405,393,1548,420"/>
+<area shape="rect" id="node4" href="$_hash_8hpp.html" title="Hash value definition and utilities (header) " alt="" coords="1245,468,1369,495"/>
+<area shape="rect" id="node9" href="$_hasher__fwd_8hpp.html" title="Forward declarations of some of BPHash. " alt="" coords="1395,468,1558,495"/>
+<area shape="rect" id="node14" href="$array_8hpp.html" title="Hashing of std::array. " alt="" coords="1879,162,2037,189"/>
+<area shape="rect" id="node16" href="$complex_8hpp.html" title="Hashing of std::complex. " alt="" coords="1305,162,1483,189"/>
+<area shape="rect" id="node18" href="$map_8hpp.html" title="Hashing of std::map. " alt="" coords="242,162,397,189"/>
+<area shape="rect" id="node20" href="$utility_8hpp.html" title="Hashing of std::pair. " alt="" coords="146,244,306,271"/>
+<area shape="rect" id="node23" href="$memory_8hpp.html" title="Hashing of std::unique_ptr and std::shared_ptr. " alt="" coords="1934,244,2110,271"/>
+<area shape="rect" id="node24" href="$set_8hpp.html" title="Hashing of std::set. " alt="" coords="421,162,567,189"/>
+<area shape="rect" id="node26" href="$string_8hpp.html" title="Hashing of std::string. " alt="" coords="777,162,939,189"/>
+<area shape="rect" id="node27" href="$tuple_8hpp.html" title="Hashing of std::tuple. " alt="" coords="1507,162,1665,189"/>
+<area shape="rect" id="node29" href="$unordered__map_8hpp.html" title="Hashing of std::unordered_map. " alt="" coords="5,155,167,196"/>
+<area shape="rect" id="node31" href="$unordered__set_8hpp.html" title="Hashing of std::unordered_set. " alt="" coords="592,155,753,196"/>
+<area shape="rect" id="node33" href="$vector_8hpp.html" title="Hashing of std::vector. " alt="" coords="1689,162,1854,189"/>
+<area shape="rect" id="node34" href="$list_8hpp.html" title="Hashing of std::list. " alt="" coords="963,162,1110,189"/>
+<area shape="rect" id="node36" href="$forward__list_8hpp.html" title="Hashing of std::forward_list. " alt="" coords="1134,155,1281,196"/>
+<area shape="rect" id="node19" href="$_container_helper_8hpp.html" title="Helpers for hashing STL containers. " alt="" coords="748,244,971,271"/>
+</map>

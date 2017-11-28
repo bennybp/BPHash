@@ -1,0 +1,6 @@
+<map id="bphash::detail::MurmurHash3_32_x64::finalize" name="bphash::detail::MurmurHash3_32_x64::finalize">
+<area shape="rect" id="node2" href="$classbphash_1_1detail_1_1_murmur_hash3__128__x64.html#a1bc838b1cb193922f32411cbf754c82e" title="Finish hashing and report the hash. " alt="" coords="247,23,440,65"/>
+<area shape="rect" id="node5" href="$namespacebphash.html#a28411c3cb5955b5aa8dafbd8f7204950" title="Truncate the hash to a given number of bytes. " alt="" coords="266,89,421,116"/>
+<area shape="rect" id="node3" href="$_murmur_hash3__128__x64_8cpp.html#af4adfdbf8bebc46e62a78cba7ead57ba" title="rotl64" alt="" coords="491,5,546,32"/>
+<area shape="rect" id="node4" href="$_murmur_hash3__128__x64_8cpp.html#ac40643ab234623c93b2f132f477a7bd8" title="fmix64" alt="" coords="488,56,549,83"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="bphash::detail::HashImpl" name="bphash::detail::HashImpl">
+<area shape="rect" id="node2" href="$classbphash_1_1detail_1_1_murmur_hash3__128__x64.html" title="Implementation of MurmurHash3 128&#45;bit x64 hash. " alt="" coords="113,80,307,121"/>
+<area shape="rect" id="node5" href="$classbphash_1_1detail_1_1_murmur_hash3__32__x32.html" title="Implementation of MurmurHash3 32&#45;bit x32 hash. " alt="" coords="331,80,524,121"/>
+<area shape="rect" id="node3" href="$classbphash_1_1detail_1_1_murmur_hash3__32__x64.html" title="Implementation of MurmurHash3 32&#45;bit x64 hash. " alt="" coords="5,169,199,211"/>
+<area shape="rect" id="node4" href="$classbphash_1_1detail_1_1_murmur_hash3__64__x64.html" title="Implementation of MurmurHash3 64&#45;bit x64 hash. " alt="" coords="223,169,416,211"/>
+</map>

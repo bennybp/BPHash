@@ -1,0 +1,12 @@
+<map id="bphash::Hasher::finalize" name="bphash::Hasher::finalize">
+<area shape="rect" id="node2" href="$namespacebphash.html#a2a8a965caf0ab54bed55d26fa44bbce4" title="Convenience function for hashing objects in a single function call. " alt="" coords="236,56,375,83"/>
+<area shape="rect" id="node11" href="$namespacebphash.html#af197909a16baa86b5d5406b23f8b7009" title="Convenience function hashing selected elements of a container. " alt="" coords="216,107,395,133"/>
+<area shape="rect" id="node3" href="$structbphash_1_1_std_hash.html#ac17b14132c5714336a2390c74ce74297" title="bphash::StdHash::operator()" alt="" coords="443,5,629,32"/>
+<area shape="rect" id="node4" href="$test__benchmark_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title="main" alt="" coords="511,56,561,83"/>
+<area shape="rect" id="node5" href="$test__helpers_8hpp.html#a95a01ea88d524451dc48350e516e7527" title="test_single" alt="" coords="493,107,579,133"/>
+<area shape="rect" id="node6" href="$test__helpers_8hpp.html#a62cd81139e71ca18180879125f207f8f" title="test_values" alt="" coords="694,5,783,32"/>
+<area shape="rect" id="node7" href="$test__helpers_8hpp.html#a74c4b358c84898d2ae22797b33978ac9" title="test_pointers" alt="" coords="690,56,787,83"/>
+<area shape="rect" id="node8" href="$test__helpers_8hpp.html#af2068e68b7a99c2e7f35fddf277881ad" title="test_array_helper" alt="" coords="677,107,800,133"/>
+<area shape="rect" id="node9" href="$test__helpers_8hpp.html#abb79dade14895a4ba32c2c67d1102265" title="test_containers" alt="" coords="683,157,794,184"/>
+<area shape="rect" id="node10" href="$test__helpers_8hpp.html#a70fb1edf70f1bed358238d51481846e5" title="test_tuples_2" alt="" coords="689,208,789,235"/>
+</map>

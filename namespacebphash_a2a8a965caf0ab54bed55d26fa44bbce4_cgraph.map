@@ -1,0 +1,5 @@
+<map id="bphash::make_hash" name="bphash::make_hash">
+<area shape="rect" id="node2" href="$classbphash_1_1_hasher.html#a28731ad3dcc5fd1728b538b77e03db78" title="Perform any remaining steps and return the hash. " alt="" coords="192,31,355,57"/>
+<area shape="rect" id="node3" href="$namespacebphash.html#ac7793bd7f4610aa435caf97068a3e75a" title="Hashing of std::array. " alt="" coords="403,5,545,32"/>
+<area shape="rect" id="node4" href="$namespacebphash.html#a426851c345d47bdddc74ba30568d1134" title="Wrap a raw pointer so that it can be hashed. " alt="" coords="593,31,740,57"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="test_offset" name="test_offset">
+<area shape="rect" id="node2" href="$classbphash_1_1detail_1_1_hash_impl.html#a872ed6b172916e76a7b2f1e576a7c9a7" title="Zero out the hash. " alt="" coords="137,5,304,47"/>
+<area shape="rect" id="node3" href="$classbphash_1_1detail_1_1_hash_impl.html#a5697c9ec1e8c6b35b9ef8ef1bfa0b7d8" title="Add some data to the hash. " alt="" coords="137,71,304,112"/>
+<area shape="rect" id="node4" href="$classbphash_1_1detail_1_1_hash_impl.html#a4679fa0164f873e10ed153b2efc91c3c" title="Finish hashing and report the hash. " alt="" coords="137,136,304,177"/>
+</map>

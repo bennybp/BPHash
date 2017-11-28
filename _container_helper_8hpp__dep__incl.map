@@ -1,0 +1,20 @@
+<map id="ContainerHelper.hpp" name="ContainerHelper.hpp">
+<area shape="rect" id="node2" href="$map_8hpp.html" title="Hashing of std::map. " alt="" coords="5,80,77,107"/>
+<area shape="rect" id="node12" href="$set_8hpp.html" title="Hashing of std::set. " alt="" coords="102,80,167,107"/>
+<area shape="rect" id="node13" href="$string_8hpp.html" title="Hashing of std::string. " alt="" coords="191,80,270,107"/>
+<area shape="rect" id="node14" href="$unordered__map_8hpp.html" title="Hashing of std::unordered_map. " alt="" coords="295,80,431,107"/>
+<area shape="rect" id="node15" href="$unordered__set_8hpp.html" title="Hashing of std::unordered_set. " alt="" coords="455,80,585,107"/>
+<area shape="rect" id="node16" href="$vector_8hpp.html" title="Hashing of std::vector. " alt="" coords="836,80,919,107"/>
+<area shape="rect" id="node18" href="$list_8hpp.html" title="Hashing of std::list. " alt="" coords="609,80,673,107"/>
+<area shape="rect" id="node19" href="$forward__list_8hpp.html" title="Hashing of std::forward_list. " alt="" coords="697,80,812,107"/>
+<area shape="rect" id="node3" href="$_all_8hpp.html" title="A convenience header that includes all the types supported by bphash. " alt="" coords="410,155,473,181"/>
+<area shape="rect" id="node4" href="$test__detect_8cpp.html" title="Testing of compile&#45;time detection of hashing ability. " alt="" coords="245,229,357,256"/>
+<area shape="rect" id="node5" href="$test__helpers_8hpp.html" title="Helper functions for testing. " alt="" coords="382,229,501,256"/>
+<area shape="rect" id="node11" href="$test__stl_8cpp.html" title="Testing of std::hash replacement. " alt="" coords="525,229,616,256"/>
+<area shape="rect" id="node6" href="$test__floating_8cpp.html" title="Testing of floating point types. " alt="" coords="97,304,215,331"/>
+<area shape="rect" id="node7" href="$test__integers_8cpp.html" title="Testing of integral types. " alt="" coords="240,304,363,331"/>
+<area shape="rect" id="node8" href="$test__string_8cpp.html" title="Testing of string types. " alt="" coords="387,304,495,331"/>
+<area shape="rect" id="node9" href="$test__tuple_8cpp.html" title="Testing of tuple and pair. " alt="" coords="520,304,624,331"/>
+<area shape="rect" id="node10" href="$test__unique_8cpp.html" title="test_unique.cpp" alt="" coords="648,304,763,331"/>
+<area shape="rect" id="node17" href="$test__benchmark_8cpp.html" title="Benchmarking of hashing algorithms. " alt="" coords="807,155,947,181"/>
+</map>

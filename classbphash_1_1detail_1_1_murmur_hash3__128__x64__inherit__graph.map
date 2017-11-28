@@ -1,0 +1,5 @@
+<map id="bphash::detail::MurmurHash3_128_x64" name="bphash::detail::MurmurHash3_128_x64">
+<area shape="rect" id="node3" href="$classbphash_1_1detail_1_1_murmur_hash3__32__x64.html" title="Implementation of MurmurHash3 32&#45;bit x64 hash. " alt="" coords="5,169,199,211"/>
+<area shape="rect" id="node4" href="$classbphash_1_1detail_1_1_murmur_hash3__64__x64.html" title="Implementation of MurmurHash3 64&#45;bit x64 hash. " alt="" coords="223,169,416,211"/>
+<area shape="rect" id="node2" href="$classbphash_1_1detail_1_1_hash_impl.html" title="Base class for a hash implementation. " alt="" coords="127,5,293,32"/>
+</map>
