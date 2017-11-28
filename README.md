@@ -3,8 +3,7 @@
 **BPHash** is a C++ library designed for easy hashing of
 data types commonly encountered in C++.
 
-The main documentation is found at https://www.bennyp.org/programming/bphash
-
+The main documentation is found at http://bennybp.github.io/BPHash/
 
 ## General Features
 
