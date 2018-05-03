@@ -118,9 +118,9 @@ class Hasher
             hash_single_(obj);
 
             // Now hash the type of the object
-            const char * typestr = typeid(T).name();
-            size_t len = strlen(typestr);
-            hashimpl_->update(typestr, len);
+            //const char * typestr = typeid(T).name();
+            //size_t len = strlen(typestr);
+            //hashimpl_->update(typestr, len);
 
             // and the rest
             (*this)(objs...);
