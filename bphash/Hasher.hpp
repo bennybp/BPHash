@@ -117,10 +117,12 @@ class Hasher
             // Hash the object itself
             hash_single_(obj);
 
-            // Now hash the type of the object
+            // Now hash the type of the object (if enabled)
+            #ifdef BPHASH_USE_TYPEID
             const char * typestr = typeid(T).name();
             size_t len = strlen(typestr);
             hashimpl_->update(typestr, len);
+            #endif
 
             // and the rest
             (*this)(objs...);

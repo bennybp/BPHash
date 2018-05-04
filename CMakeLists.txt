@@ -18,6 +18,13 @@ endif()
 # Enable testing?
 enable_testing()
 
+# BPHash-specific options
+option(BPHASH_USE_TYPEID "Hash the typeid name of the object along with the data" OFF)
+
+if(BPHASH_USE_TYPEID)
+    add_compile_options(-DBPHASH_USE_TYPEID)
+endif()
+
 # Set the compile options
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
     add_compile_options(-w3)
